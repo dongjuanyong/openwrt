@@ -1,0 +1,126 @@
+msgid ""
+msgstr "Content-Type: text/plain; charset=UTF-8\n"
+
+msgid "UDPspeeder"
+msgstr "UDPspeeder"
+
+msgid "Settings"
+msgstr "设置"
+
+msgid "Servers Manage"
+msgstr "服务器管理"
+
+msgid "Running Status"
+msgstr "运行状态"
+
+msgid "Binary Version"
+msgstr "文件版本"
+
+msgid "Build Time"
+msgstr "编译时间"
+
+msgid "Invalid Binary File."
+msgstr "可执行文件无效。"
+
+msgid "RUNNING"
+msgstr "运行中"
+
+msgid "NOT RUNNING"
+msgstr "未运行"
+
+msgid "General Settings"
+msgstr "基本设置"
+
+msgid "Server"
+msgstr "服务器"
+
+msgid "Disable"
+msgstr "停用"
+
+msgid "Run Daemon as User"
+msgstr "以该用户启动"
+
+msgid "Alias"
+msgstr "别名"
+
+msgid "None"
+msgstr "无"
+
+msgid "Server Address"
+msgstr "服务器地址"
+
+msgid "Listen Address"
+msgstr "监听地址"
+
+msgid "Edit Server"
+msgstr "编辑服务器"
+
+msgid "Alias(optional)"
+msgstr "别名(可选)"
+
+msgid "Server Port"
+msgstr "服务器端口"
+
+msgid "Local Listen Host"
+msgstr "本地监听地址"
+
+msgid "Local Listen Port"
+msgstr "本地监听端口"
+
+msgid "Password"
+msgstr "密码"
+
+msgid "FEC Parameters"
+msgstr "FEC参数"
+
+msgid "x1:y1,x2:y2,.."
+msgstr "x1:y1,x2:y2,.."
+
+msgid "Timeout"
+msgstr "延迟"
+
+msgid "Unit: ms, default: 8ms"
+msgstr "单位ms，默认8ms"
+
+msgid "FEC Mode"
+msgstr "FEC模式"
+
+msgid "Default: mode 0"
+msgstr "默认模式0"
+
+msgid "MTU"
+msgstr "最大传输单元"
+
+msgid "Default value: 1250"
+msgstr "默认值1250"
+
+msgid "Queue Length"
+msgstr "队列长度"
+
+msgid "Default value: 200"
+msgstr "默认值200"
+
+msgid "Jitter"
+msgstr "抖动"
+
+msgid "Unit: ms, default value: 0"
+msgstr "单位ms，默认值0"
+
+msgid "Interval"
+msgstr "交错"
+
+msgid "Random Drop Packets"
+msgstr "随机丢包"
+
+msgid "Unit: 0.01%, default value: 0"
+msgstr "单位0.01%，默认值0"
+
+msgid "Disable Obscure"
+msgstr "关闭伪装"
+
+msgid "Save a bit bandwidth and cpu"
+msgstr "省一些带宽和CPU"
+
+msgid "Log Level"
+msgstr "日志级别"
+

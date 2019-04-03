@@ -1,0 +1,138 @@
+#!/bin/sh /etc/rc.common
+
+START=18
+STOP=89
+USE_PROCD=1
+
+NAME=dnscrypt-proxy_2
+
+_log() {
+	logger -p "daemon.$1" -t "$NAME" "$2"
+}
+
+create_config() {
+	local config_file="$1"
+	if [ -z "$server_names" ] ; then
+		_log "err" "You must select a least one server to use dnscrypt-proxy. Exiting..."
+		exit 1
+	fi
+	
+	echo "# auto-generated config file from /etc/config/dnscrypt-proxy_2" > $config_file
+
+	local temp=`echo "${server_names}" |sed 's/ /'\'', '\''/g'`
+	echo "server_names = ['${temp}']" >> $config_file && _log "info" "dnscrypt-proxy using servers: ${server_names}"
+
+	temp=`echo "${listen_addresses}" |sed 's/ /'\'', '\''/g'`
+	echo "listen_addresses = ['${temp}']" >> $config_file && _log "info" "dnscrypt-proxy listening to: ${listen_addresses}"
+
+	[ -n "$max_clients" ] && echo "max_clients = ${max_clients}" >> $config_file
+	[ $ipv4_servers -eq 1 ] && echo "ipv4_servers = true" >> $config_file
+	[ $ipv4_servers -eq 0 ] && echo "ipv4_servers = false" >> $config_file
+	[ $ipv6_servers -eq 1 ] && echo "ipv6_servers = true" >> $config_file
+	[ $ipv6_servers -eq 0 ] && echo "ipv6_servers = false" >> $config_file
+	[ $dnscrypt_servers -eq 1 ] && echo "dnscrypt_servers = true" >> $config_file
+	[ $dnscrypt_servers -eq 0 ] && echo "dnscrypt_servers = false" >> $config_file
+	[ $doh_servers -eq 1 ] && echo "doh_servers = true" >> $config_file
+	[ $doh_servers -eq 0 ] && echo "doh_servers = false" >> $config_file
+	[ $require_dnssec -eq 1 ] && echo "require_dnssec = true" >> $config_file
+	[ $require_dnssec -eq 0 ] && echo "require_dnssec = false" >> $config_file
+	[ $require_nolog -eq 1 ] && echo "require_nolog = true" >> $config_file
+	[ $require_nolog -eq 0 ] && echo "require_nolog = false" >> $config_file
+	[ $require_nofilter -eq 1 ] && echo "require_nofilter = true" >> $config_file
+	[ $require_nofilter -eq 0 ] && echo "require_nofilter = false" >> $config_file
+	[ $force_tcp -eq 1 ] && echo "force_tcp = true" >> $config_file
+	[ $force_tcp -eq 0 ] && echo "force_tcp = false" >> $config_file
+	[ -n "$timeout" ] && echo "timeout = ${timeout}" >> $config_file
+	[ -n "$keepalive" ] && echo "keepalive = ${keepalive}" >> $config_file
+	echo "use_syslog = false" >> $config_file
+	[ -n "$cert_refresh_delay" ] && echo "cert_refresh_delay = ${cert_refresh_delay}" >> $config_file
+	[ -n "$fallback_resolver" ] && echo "fallback_resolver = '${fallback_resolver}'" >> $config_file
+	[ $ignore_system_dns -eq 1 ] && echo "ignore_system_dns = true" >> $config_file
+	[ $ignore_system_dns -eq 0 ] && echo "ignore_system_dns = false" >> $config_file
+	[ -n "$netprobe_timeout" ] && echo "netprobe_timeout = ${netprobe_timeout}" >> $config_file
+	[ $block_ipv6 -eq 1 ] && echo "block_ipv6 = true" >> $config_file
+	[ $block_ipv6 -eq 0 ] && echo "block_ipv6 = false" >> $config_file
+	if [ $cache -eq 1 ] ; then
+		echo "cache = true" >> $config_file
+		echo "cache_size = 512" >> $config_file
+		echo "cache_min_ttl = 600" >> $config_file
+		echo "cache_max_ttl = 86400" >> $config_file
+		echo "cache_neg_min_ttl = 60" >> $config_file
+		echo "cache_neg_max_ttl = 600" >> $config_file
+	fi
+	[ $cache -eq 0 ] && echo "cache = false" >> $config_file
+
+	echo "[query_log]" >> $config_file
+	echo "[nx_log]" >> $config_file
+	echo "[blacklist]" >> $config_file
+	echo "[ip_blacklist]" >> $config_file
+	echo "[whitelist]" >> $config_file
+	echo "[schedules]" >> $config_file
+	echo "[sources]" >> $config_file
+
+	if [ $public_resolvers -eq 1 ] ; then
+		echo "  [sources.'public-resolvers']" >> $config_file
+		echo "  urls = ['https://raw.githubusercontent.com/DNSCrypt/dnscrypt-resolvers/master/v2/public-resolvers.md', 'https://download.dnscrypt.info/resolvers-list/v2/public-resolvers.md']" >> $config_file
+		echo "  cache_file = '/etc/dnscrypt-proxy/public-resolvers.md'" >> $config_file
+		echo "  minisign_key = 'RWQf6LRCGA9i53mlYecO4IzT51TGPpvWucNSCh1CBM0QTaLn73Y7GFO3'" >> $config_file
+		echo "  refresh_delay = 72" >> $config_file
+		echo "  prefix = ''" >> $config_file
+	fi
+
+	echo "[static]" >> $config_file
+	if [ -s /etc/dnscrypt-proxy/addconf ] ; then
+		cat /etc/dnscrypt-proxy/addconf >> $config_file
+	fi
+}
+
+validate_config_section() {
+	uci_validate_section "$NAME" service "$1" \
+		'enabled:bool:0' \
+		'public_resolvers:bool:1' \
+		'server_names:list(string)' \
+		'listen_addresses:list(string):"127.0.0.1:5353"' \
+		'max_clients:uinteger:250' \
+		'ipv4_servers:bool:1' \
+		'ipv6_servers:bool:0' \
+		'dnscrypt_servers:bool:1' \
+		'doh_servers:bool:1' \
+		'require_dnssec:bool:0' \
+		'require_nolog:bool:1' \
+		'require_nofilter:bool:1' \
+		'force_tcp:bool:0' \
+		'timeout:uinteger:2500' \
+		'keepalive:uinteger:30' \
+		'cert_refresh_delay:uinteger:240' \
+		'fallback_resolver:string:"114.114.114.114:53"' \
+		'ignore_system_dns:bool:0' \
+		'netprobe_timeout:uinteger:60' \
+		'block_ipv6:bool:0' \
+		'cache:bool:1'
+}
+
+service_triggers() {
+	procd_add_reload_trigger "$NAME"
+}
+
+start_service() {
+	if ! validate_config_section "dnscrypt" ; then
+		_log "err" "Config validate failed."
+		return 1
+	fi
+
+	if [ $enabled -eq 0 ] ; then
+		return 1
+	fi
+
+	[ -d /var/etc ] || mkdir -p /var/etc
+	local config_file="/var/etc/${NAME}.toml"
+	create_config "$config_file" || return 1
+
+	procd_open_instance
+	procd_set_param command /usr/bin/dnscrypt-proxy
+	procd_append_param command -config "$config_file"
+	procd_set_param respawn
+	procd_set_param file "$config_file"
+	procd_set_param pidfile "/var/run/${NAME}.pid"
+	procd_close_instance
+}

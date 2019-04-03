@@ -1,0 +1,72 @@
+msgid "dnscrypt-proxy 2"
+msgstr "dnscrypt-proxy 2"
+
+msgid "A flexible DNS proxy, with support for modern encrypted DNS protocols such as DNSCrypt v2 and DNS-over-HTTPS."
+msgstr "支持DNSCrypt v2和DNS-over-HTTPS等加密协议的DNS代理"
+
+msgid "Enable"
+msgstr "启用"
+
+msgid "Use public-resolvers source"
+msgstr "使用公共解析源"
+
+msgid "Servers to use"
+msgstr "上级DNS服务器" 
+
+msgid "Listen addresses (ip:port)"
+msgstr "监听地址(IP:端口)" 
+
+msgid "Maximum client connections"
+msgstr "客户端连接限制" 
+
+msgid "Use IPv4 servers"
+msgstr "使用IPv4服务器" 
+
+msgid "Use IPv6 servers"
+msgstr "使用IPv6服务器" 
+
+msgid "Use DNSCrypt servers"
+msgstr "使用DNSCrypt服务器" 
+
+msgid "Use DNS-over-HTTPS servers"
+msgstr "使用DNS-over-HTTPS服务器" 
+
+msgid "Only servers with DNSSEC support"
+msgstr "服务器必须支持DNSSEC"
+
+msgid "Only servers without logging"
+msgstr "服务器必须不保留日志"
+
+msgid "Only servers without filter"
+msgstr "服务器必须不过滤结果"
+
+msgid "Always use TCP to connect"
+msgstr "总是使用TCP连接"
+
+msgid "Query timeout"
+msgstr "查询超时"
+
+msgid "Query keepalive"
+msgstr "连接保活"
+
+msgid "Certificate refresh delay"
+msgstr "证书刷新间隔"
+
+msgid "Fallback resolver"
+msgstr "备用解析源"
+
+msgid "Ignore system DNS"
+msgstr "忽略系统DNS"
+
+msgid "Time to wait for network"
+msgstr "等待网络连通延迟"
+
+msgid "Block IPV6 records"
+msgstr "屏蔽IPV6记录"
+
+msgid "Enable DNS cache"
+msgstr "启用DNS缓存"
+
+msgid "Put additional configurations here."
+msgstr "在这里附加其他配置"
+

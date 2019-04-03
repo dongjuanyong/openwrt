@@ -1,0 +1,13 @@
+diff -uNr a/makefile b/makefile
+--- a/makefile	2019-03-21 10:28:57.989528000 +0800
++++ b/makefile	2019-03-21 12:18:34.384108000 +0800
+@@ -77,6 +77,9 @@
+ cross3:git_version
+ 	${cc_cross}   -o ${NAME}_cross    -I. ${SOURCES} ${FLAGS} -lrt -static -O3
+ 
++crossx:git_version
++	${cc_cross}   -o ${NAME}_cross    -I. ${SOURCES_AES_ACC} ${FLAGS} -lrt -O3 lib/aes_acc/asm/x64.S
++
+ release: ${TARGETS} 
+ 	cp git_version.h version.txt
+ 	tar -zcvf ${TAR}
