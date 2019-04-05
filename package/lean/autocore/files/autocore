@@ -58,8 +58,8 @@ start()
   ethtool -K eth3 gso on >/dev/null 2>&1
   
   [ -f /etc/index.htm ] && mv /etc/index.htm /usr/lib/lua/luci/view/admin_status/index.htm
-  [ -f /etc/index.js ] && mv /etc/index.htm /www/luci-static/resources/view/status/index.js
-  [ -f /etc/10-system.htm ] && mv /etc/index.htm /usr/lib/lua/luci/view/admin_status/index/10-system.htm
+  [ -f /etc/index.js ] && mv /etc/index.js /www/luci-static/resources/view/status/index.js
+  [ -f /etc/10-system.htm ] && mv /etc/10-system.htm /usr/lib/lua/luci/view/admin_status/index/10-system.htm
 }
 
 
