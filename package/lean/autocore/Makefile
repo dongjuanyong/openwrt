@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=autocore
-PKG_VERSION:=1
+PKG_VERSION:=2
 PKG_RELEASE:=16
 
 
@@ -32,6 +32,8 @@ define Package/autocore/install
 	$(INSTALL_BIN) ./files/autocore $(1)/etc/init.d/autocore
 	$(INSTALL_DIR) $(1)/etc
 	$(INSTALL_DATA) ./files/index.htm $(1)/etc/index.htm
+	$(INSTALL_DATA) ./files/index.js $(1)/etc/index.js
+	$(INSTALL_DATA) ./files/10-system.htm $(1)/etc/10-system.htm
 endef
 
 $(eval $(call BuildPackage,autocore))
