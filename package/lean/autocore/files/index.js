@@ -191,24 +191,24 @@ L.poll(5, L.location(), { status: 1 },
 			);
 
 		progressbar('#memtotal',
-			((info.memory.free + info.memory.buffered) / 1048576) + ' ' + _('MB'),
-			(info.memory.total / 1048576) + ' ' + _('MB'));
+			Math.floor((info.memory.free + info.memory.buffered) / 1048576) + ' ' + _('MB'),
+			Math.floor(info.memory.total / 1048576) + ' ' + _('MB'));
 
 		progressbar('#memfree',
-			(info.memory.free / 1048576) + ' ' + _('MB'),
-			(info.memory.total / 1048576) + ' ' + _('MB'));
+			Math.floor(info.memory.free / 1048576) + ' ' + _('MB'),
+			Math.floor(info.memory.total / 1048576) + ' ' + _('MB'));
 
 		progressbar('#membuff',
-			(info.memory.buffered / 1048576) + ' ' + _('MB'),
-			(info.memory.total / 1048576) + ' ' + _('MB'));
+			Math.floor(info.memory.buffered / 1048576) + ' ' + _('MB'),
+			Math.floor(info.memory.total / 1048576) + ' ' + _('MB'));
 
 		progressbar('#swaptotal',
-			(info.swap.free / 1048576) + ' ' + _('MB'),
-			(info.swap.total / 1048576) + ' ' + _('MB'));
+			Math.floor(info.swap.free / 1048576) + ' ' + _('MB'),
+			Math.floor(info.swap.total / 1048576) + ' ' + _('MB'));
 
 		progressbar('#swapfree',
-			(info.swap.free / 1048576) + ' ' + _('MB'),
-			(info.swap.total / 1048576) + ' ' + _('MB'));
+			Math.floor(info.swap.free / 1048576) + ' ' + _('MB'),
+			Math.floor(info.swap.total / 1048576) + ' ' + _('MB'));
 
 		progressbar('#conns',
 			info.conncount, info.connmax);
