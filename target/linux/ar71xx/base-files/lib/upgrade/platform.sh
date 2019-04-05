@@ -579,6 +579,7 @@ platform_check_image() {
 	rambutan|\
 	wi2a-ac200i|\
 	wndr3700v4|\
+	sbr-ac1750|\
 	wndr4300)
 		nand_do_platform_check $board $1
 		return $?
@@ -894,6 +895,7 @@ platform_do_upgrade() {
 	rb-sxt5n|\
 	wi2a-ac200i|\
 	wndr3700v4|\
+	sbr-ac1750|\
 	wndr4300)
 		nand_do_upgrade "$1"
 		;;

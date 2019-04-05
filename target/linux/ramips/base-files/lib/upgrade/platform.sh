@@ -37,8 +37,10 @@ platform_do_upgrade() {
 
 	case "$board" in
 	hc5962|\
+	mir4|\
 	r6220|\
 	netgear,r6350|\
+	xiaomi,miwifi-r3|\
 	ubnt-erx|\
 	ubnt-erx-sfp|\
 	xiaomi,mir3g|\

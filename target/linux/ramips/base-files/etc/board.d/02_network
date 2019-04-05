@@ -179,6 +179,10 @@ ramips_setup_interfaces()
 		ucidef_add_switch "switch0" \
 			"1:lan:2" "2:lan:1" "3:lan:3" "4:lan" "0:wan" "6@eth0"
 		;;
+	mir4)
+		ucidef_add_switch "switch0" \
+			"1:lan:1" "2:lan:2" "4:wan" "6t@eth0"
+		;;		
 	psg1218b)
 		ucidef_add_switch "switch0" \
 			"0:lan:3" "1:lan:2" "2:lan:1" "3:wan" "6@eth0"
@@ -439,6 +443,10 @@ ramips_setup_interfaces()
 		ucidef_add_switch "switch0" \
 			"4:lan" "0:wan" "6@eth0"
 		;;
+	xiaomi,miwifi-r3)
+		ucidef_add_switch "switch0" \
+			"1:lan" "4:lan" "0:wan" "6@eth0"
+		;;
 	xiaomi,mir3g)
 		ucidef_add_switch "switch0" \
 			"2:lan:2" "3:lan:1" "1:wan" "6t@eth0"
@@ -579,6 +587,11 @@ ramips_setup_macs()
 		lan_mac=$(mtd_get_mac_binary factory_info 13)
 		wan_mac=$(macaddr_add "$lan_mac" 1)
 		;;
+	mir4)
+		lan_mac=$(mtd_get_mac_binary Factory 0xe006)
+		wan_mac=$(mtd_get_mac_binary Factory 0xe000)
+		;;
+	xiaomi,miwifi-r3|\
 	miwifi-mini)
 		wan_mac=$(cat /sys/class/net/eth0/address)
 		lan_mac=$(macaddr_setbit_la "$wan_mac")

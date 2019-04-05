@@ -271,6 +271,26 @@ define Device/xiaomi_mir3g
 endef
 TARGET_DEVICES += xiaomi_mir3g
 
+define Device/mir4
+  DTS := MIR4
+  BLOCKSIZE := 128k
+  PAGESIZE := 2048
+  KERNEL_SIZE := 4096k
+  IMAGE_SIZE := 32768k
+  UBINIZE_OPTS := -E 5
+  IMAGES += kernel1.bin rootfs0.bin factory.bin
+  IMAGE/kernel1.bin := append-kernel
+  IMAGE/rootfs0.bin := append-ubi | check-size $$$$(IMAGE_SIZE)
+  IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
+  IMAGE/factory.bin := append-kernel | pad-to $$(KERNEL_SIZE) |append-kernel | pad-to $$(KERNEL_SIZE)| append-ubi | check-size $$$$(IMAGE_SIZE)
+  DEVICE_TITLE := Xiaomi Mi Router 4
+  SUPPORTED_DEVICES += R4
+  DEVICE_PACKAGES := \
+	kmod-mt7603 kmod-mt76x2 kmod-usb3 wpad-basic \
+	uboot-envtools
+endef
+TARGET_DEVICES += mir4
+
 define Device/mt7621
   DTS := MT7621
   BLOCKSIZE := 64k
@@ -299,7 +319,7 @@ TARGET_DEVICES += d-team_newifi-d2
 
 define Device/pbr-m1
   DTS := PBR-M1
-  IMAGE_SIZE := $(ralink_default_fw_size_16M)
+  IMAGE_SIZE := $(ralink_default_fw_size_32M)
   DEVICE_TITLE := PBR-M1
   DEVICE_PACKAGES := \
 	kmod-ata-core kmod-ata-ahci kmod-mt7603 kmod-mt76x2 kmod-sdhci-mt7620 \

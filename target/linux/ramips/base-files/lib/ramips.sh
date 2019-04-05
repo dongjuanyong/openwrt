@@ -277,6 +277,9 @@ ramips_board_detect() {
 	*"Mercury MAC1200R v2")
 		name="mac1200rv2"
 		;;
+	*"Mi Router 4")
+		name="mir4"
+		;;		
 	*"MicroWRT")
 		name="microwrt"
 		;;
