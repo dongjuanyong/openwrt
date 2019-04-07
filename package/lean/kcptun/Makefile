@@ -76,9 +76,9 @@ This package provides the source files for the kcptun client/server.
 endef
 
 define Build/Compile
-$(call Build/Compile/Default)
-	chmod +x $$(GO_PKG_BUILD_BIN_DIR)/kcptun-client && upx --lzma $$(GO_PKG_BUILD_BIN_DIR)/kcptun-client
-	chmod +x $$(GO_PKG_BUILD_BIN_DIR)/kcptun-server && upx --lzma $$(GO_PKG_BUILD_BIN_DIR)/kcptun-server
+$(call GoPackage/Build/Compile)
+        chmod +x $$(GO_PKG_BUILD_BIN_DIR)/client && upx --lzma $$(GO_PKG_BUILD_BIN_DIR)/client
+        chmod +x $$(GO_PKG_BUILD_BIN_DIR)/server && upx --lzma $$(GO_PKG_BUILD_BIN_DIR)/server
 endef
 
 KCPTUN_COMPONENTS:=client server
