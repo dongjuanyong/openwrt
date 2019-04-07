@@ -56,8 +56,12 @@ define kcptun/templates
   This package contains the kcptun $(1).
   endef
 
+  define Build/kcptun-$(1)/Compile
+$(call Build/Compile/Default)
+	chmod +x $$(GO_PKG_BUILD_BIN_DIR)/$(1) && upx --lzma $$(GO_PKG_BUILD_BIN_DIR)/$(1)
+  endef
+
   define Package/kcptun-$(1)/install
-  chmod +x $$(GO_PKG_BUILD_BIN_DIR)/$(1) && upx --lzma $$(GO_PKG_BUILD_BIN_DIR)/$(1)
 	$$(INSTALL_DIR) $$(1)/usr/bin
 	$$(INSTALL_BIN) $$(GO_PKG_BUILD_BIN_DIR)/$(1) $$(1)/usr/bin/kcptun-$(1)
   endef
