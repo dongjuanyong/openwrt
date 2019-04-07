@@ -56,11 +56,6 @@ define kcptun/templates
   This package contains the kcptun $(1).
   endef
 
-  define Build/kcptun-$(1)/Compile
-$(call Build/Compile/Default)
-	chmod +x $$(GO_PKG_BUILD_BIN_DIR)/$(1) && upx --lzma $$(GO_PKG_BUILD_BIN_DIR)/$(1)
-  endef
-
   define Package/kcptun-$(1)/install
 	$$(INSTALL_DIR) $$(1)/usr/bin
 	$$(INSTALL_BIN) $$(GO_PKG_BUILD_BIN_DIR)/$(1) $$(1)/usr/bin/kcptun-$(1)
@@ -78,6 +73,12 @@ define Package/golang-github-xtaci-kcptun-dev/description
 $(call Package/kcptun/Default/description)
 
 This package provides the source files for the kcptun client/server.
+endef
+
+define Build/Compile
+$(call Build/Compile/Default)
+	chmod +x $$(GO_PKG_BUILD_BIN_DIR)/kcptun-client && upx --lzma $$(GO_PKG_BUILD_BIN_DIR)/kcptun-client
+	chmod +x $$(GO_PKG_BUILD_BIN_DIR)/kcptun-server && upx --lzma $$(GO_PKG_BUILD_BIN_DIR)/kcptun-server
 endef
 
 KCPTUN_COMPONENTS:=client server
