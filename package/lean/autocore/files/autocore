@@ -56,12 +56,6 @@ start()
   ethtool -K eth3 tso on >/dev/null 2>&1
   ethtool -K eth3 ufo on >/dev/null 2>&1
   ethtool -K eth3 gso on >/dev/null 2>&1
-  
-  [ -f /etc/index.htm ] && mv /etc/index.htm /usr/lib/lua/luci/view/admin_status/index.htm
-  [ -f /etc/index.js ] && mv /etc/index.js /www/luci-static/resources/view/status/index.js
-  [ -f /etc/10-system.htm ] && mv /etc/10-system.htm /usr/lib/lua/luci/view/admin_status/index/10-system.htm
-  [ -f /etc/zone-details.lua ] && mv /etc/zone-details.lua /usr/lib/lua/luci/model/cbi/firewall/zone-details.lua
-  [ -f /etc/zones.lua ] && mv /etc/zones.lua /usr/lib/lua/luci/model/cbi/firewall/zones.lua
 }
 
 
