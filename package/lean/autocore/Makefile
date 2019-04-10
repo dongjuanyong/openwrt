@@ -30,12 +30,6 @@ endef
 define Package/autocore/install
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/autocore $(1)/etc/init.d/autocore
-	$(INSTALL_DIR) $(1)/etc
-	$(INSTALL_DATA) ./files/index.htm $(1)/etc/index.htm
-	$(INSTALL_DATA) ./files/index.js $(1)/etc/index.js
-	$(INSTALL_DATA) ./files/10-system.htm $(1)/etc/10-system.htm
-	$(INSTALL_DATA) ./files/zone-details.lua $(1)/etc/zone-details.lua
-	$(INSTALL_DATA) ./files/zones.lua $(1)/etc/zones.lua
 endef
 
 $(eval $(call BuildPackage,autocore))
