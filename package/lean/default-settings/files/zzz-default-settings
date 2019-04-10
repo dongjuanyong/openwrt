@@ -65,7 +65,6 @@ echo "log-facility=/dev/null" >> /etc/dnsmasq.conf
 [ -f /etc/10-system.htm ] && mv /etc/10-system.htm /usr/lib/lua/luci/view/admin_status/index/10-system.htm
 [ -f /etc/zone-details.lua ] && mv /etc/zone-details.lua /usr/lib/lua/luci/model/cbi/firewall/zone-details.lua
 [ -f /etc/zones.lua ] && mv /etc/zones.lua /usr/lib/lua/luci/model/cbi/firewall/zones.lua
-[ -f /etc/init.d/samba ] && /etc/init.d/samba disable && /etc/init.d/samba stop
 [ -f /etc/init.d/vsftpd ] && /etc/init.d/vsftpd disable && /etc/init.d/vsftpd stop
 
 sed -i 's/cbi.submit\"] = true/cbi.submit\"] = \"1\"/g' /usr/lib/lua/luci/dispatcher.lua
