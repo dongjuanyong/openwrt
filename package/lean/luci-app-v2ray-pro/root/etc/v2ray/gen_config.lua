@@ -195,7 +195,11 @@ local v2ray	= {
 				header = {
 					type = ucursor:get(conf_path, "v2raypro", "quic_obfs")
 				}
-			} or nil
+			} or nil,
+
+			sockopt = {
+				tcpFastOpen = true
+			}
 		},
 		mux = {
 			enabled = (ucursor:get(conf_path, "v2raypro", "mux") == "1") and true or false
@@ -308,7 +312,11 @@ local v2ray	= {
 				header = {
 					type = ucursor:get(conf_path, "v2raypro", "rquic_obfs")
 				}
-			} or nil
+			} or nil,
+
+			sockopt = {
+				tcpFastOpen = true
+			}
 		},
 		mux = {
 			enabled = (ucursor:get(conf_path, "v2raypro", "rmux") == "1") and true or false
