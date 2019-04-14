@@ -78,6 +78,8 @@ endef
 
 define Build/Compile
 $(call GoPackage/Build/Compile,-ldflags "-s -w")
+	chmod +x $$(GO_PKG_BUILD_BIN_DIR)/frpc && upx --lzma $$(GO_PKG_BUILD_BIN_DIR)/frpc
+	chmod +x $$(GO_PKG_BUILD_BIN_DIR)/frps && upx --lzma $$(GO_PKG_BUILD_BIN_DIR)/frps
 endef
 
 FRP_COMPONENTS:=frpc frps

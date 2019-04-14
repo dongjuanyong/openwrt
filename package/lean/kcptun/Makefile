@@ -77,8 +77,8 @@ endef
 
 define Build/Compile
 $(call GoPackage/Build/Compile)
-        chmod +x $$(GO_PKG_BUILD_BIN_DIR)/client && upx --lzma $$(GO_PKG_BUILD_BIN_DIR)/client
-        chmod +x $$(GO_PKG_BUILD_BIN_DIR)/server && upx --lzma $$(GO_PKG_BUILD_BIN_DIR)/server
+	chmod +x $$(GO_PKG_BUILD_BIN_DIR)/client && upx --lzma $$(GO_PKG_BUILD_BIN_DIR)/client
+	chmod +x $$(GO_PKG_BUILD_BIN_DIR)/server && upx --lzma $$(GO_PKG_BUILD_BIN_DIR)/server
 endef
 
 KCPTUN_COMPONENTS:=client server
