@@ -58,6 +58,8 @@ uci -q batch <<-EOF >/dev/null
 	commit ucitrack
 EOF
 
+sed -i 's/#noproxyarp/proxyarp/g' /etc/ppp/options.pptpd
+
 /etc/init.d/pptpd enable && /etc/init.d/pptpd restart
 
 rm -f /tmp/luci-indexcache
