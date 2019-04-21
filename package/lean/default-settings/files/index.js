@@ -177,7 +177,7 @@ L.poll(5, L.location(), { status: 1 },
 		var e;
 
 		if (e = document.getElementById('cpuinfo'))
-			e.innerHTML = String.format('%.02f\% @ ', info.cpuusage) + String.format('%sMHz @ %s', info.cpuspeed, info.cputemp);
+			e.innerHTML = String.format('%.02f\% @ ', info.cpuusage) + String.format('%sMHz @ %s %s', info.cpuspeed, info.cputemp, info.coremark);
 		if (e = document.getElementById('localtime'))
 			e.innerHTML = info.localtime;
 

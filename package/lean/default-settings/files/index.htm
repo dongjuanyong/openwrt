@@ -46,6 +46,7 @@
 			cpuusage   = luci.sys.exec("echo $( echo $(cat /proc/stat | grep \"^cpu \" | awk '{print $2+$3+$4+$5+$6+$7+$8 \" \" $2+$3+$4+$7+$8}') $(sleep 1 && cat /proc/stat | grep \"^cpu \" | awk '{print $2+$3+$4+$5+$6+$7+$8 \" \" $2+$3+$4+$7+$8}') | awk '{print (($4-$2)/($3-$1))*100}' )"),
 			cpuspeed   = luci.sys.exec("grep 'MHz' /proc/cpuinfo | cut -c11- |sed -n '1p'"),
 			cputemp    = luci.sys.exec("sensors | grep 'Core 0' | cut -c10-24"),
+			coremark   = luci.sys.exec("cat /etc/bench.log") or " ",
 			loadavg    = sysinfo.load or { 0, 0, 0 },
 			memory     = meminfo,
 			swap       = swapinfo,
