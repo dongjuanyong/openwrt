@@ -7,46 +7,68 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=dnscrypt-proxy_2
-PKG_VERSION:=2.0.22
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
+PKG_VERSION:=2.0.23
+PKG_RELEASE:=1
+
+PKG_BIN:=dnscrypt-proxy
+PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_BIN)-$(PKG_VERSION)
+
+PKG_SOURCE:=$(PKG_BIN)-$(PKG_VERSION).tar.gz
+PKG_SOURCE_URL:=https://codeload.github.com/jedisct1/dnscrypt-proxy/tar.gz/$(PKG_VERSION)?
+PKG_HASH:=d405a562b0d4b0101a11347c1647bb55351945d82d67565b396794babf296905
+
+PKG_BUILD_DEPENDS:=golang/host
+PKG_BUILD_PARALLEL:=1
+PKG_USE_MIPS16:=0
+
+GO_PKG:=github.com/jedisct1/dnscrypt-proxy
 
 include $(INCLUDE_DIR)/package.mk
+include $(TOPDIR)/feeds/packages/lang/golang/golang-package.mk
 
 define Package/$(PKG_NAME)
 	SECTION:=net
 	CATEGORY:=Network
+	SUBMENU:=IP Addresses and Names
 	TITLE:=DNS proxy with support for encrypted DNS protocols
 	URL:=https://github.com/jedisct1/dnscrypt-proxy
+	DEPENDS:=$$(GO_ARCH_DEPENDS)
 endef
 
 define Package/$(PKG_NAME)/description
 A flexible DNS proxy, with support for modern encrypted DNS protocols such as DNSCrypt v2 and DNS-over-HTTPS.
 endef
 
-PKG_ARCH:=$(ARCH)
-ifeq ($(ARCH),aarch64)
-	PKG_ARCH:=arm64
-endif
+define Package/golang-github-jedisct1-dnscrypt-proxy-dev
+	TITLE:=DNS proxy with support for encrypted DNS protocols (source files)
+	URL:=https://github.com/jedisct1/dnscrypt-proxy
+$(call GoPackage/GoSubMenu)
+	PKGARCH:=all
+endef
 
-PKG_BIN:=dnscrypt-proxy
+define Package/golang-github-jedisct1-dnscrypt-proxy-dev/description
+$(call Package/dnscrypt-proxy_2/description)
 
-define Build/Prepare
-	[ ! -f $(PKG_BUILD_DIR)/$(PKG_BIN)-linux_$(PKG_ARCH)-$(PKG_VERSION).tar.gz ] && wget https://github.com/jedisct1/$(PKG_BIN)/releases/download/$(PKG_VERSION)/$(PKG_BIN)-linux_$(PKG_ARCH)-$(PKG_VERSION).tar.gz -O $(PKG_BUILD_DIR)/$(PKG_BIN)-linux_$(PKG_ARCH)-$(PKG_VERSION).tar.gz
-	tar -xzf $(PKG_BUILD_DIR)/$(PKG_BIN)-linux_$(PKG_ARCH)-$(PKG_VERSION).tar.gz -C $(PKG_BUILD_DIR)
-	[ ! -f $(PKG_BUILD_DIR)/public-resolvers.md ] && wget https://raw.githubusercontent.com/DNSCrypt/dnscrypt-resolvers/master/v2/public-resolvers.md -O $(PKG_BUILD_DIR)/public-resolvers.md
-	[ ! -f $(PKG_BUILD_DIR)/public-resolvers.md.minisig ] && wget https://raw.githubusercontent.com/DNSCrypt/dnscrypt-resolvers/master/v2/public-resolvers.md.minisig -O $(PKG_BUILD_DIR)/public-resolvers.md.minisig
+This package provides the source files for the dnscrypt-proxy.
 endef
 
 define Build/Compile
-	chmod +x $(PKG_BUILD_DIR)/linux-$(PKG_ARCH)/$(PKG_BIN) && upx --lzma $(PKG_BUILD_DIR)/linux-$(PKG_ARCH)/$(PKG_BIN)
+$(call GoPackage/Build/Compile,-ldflags "-s -w")
+	chmod +x $$(GO_PKG_BUILD_BIN_DIR)/$$(PKG_BIN) && upx --lzma $$(GO_PKG_BUILD_BIN_DIR)/$$(PKG_BIN)
+	[ ! -f $$(PKG_BUILD_DIR)/public-resolvers.md ] && wget https://raw.githubusercontent.com/DNSCrypt/dnscrypt-resolvers/master/v2/public-resolvers.md -O $$(PKG_BUILD_DIR)/public-resolvers.md
+	[ ! -f $$(PKG_BUILD_DIR)/public-resolvers.md.minisig ] && wget https://raw.githubusercontent.com/DNSCrypt/dnscrypt-resolvers/master/v2/public-resolvers.md.minisig -O $$(PKG_BUILD_DIR)/public-resolvers.md.minisig
 endef
 
 define Package/$(PKG_NAME)/install
-	$(INSTALL_DIR) $(1)/usr/bin
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/linux-$(PKG_ARCH)/$(PKG_BIN) $(1)/usr/bin/$(PKG_BIN)
-	$(INSTALL_DIR) $(1)/etc/$(PKG_BIN)
-	$(INSTALL_DATA) $(PKG_BUILD_DIR)/public-resolvers.md $(1)/etc/$(PKG_BIN)/public-resolvers.md
-	$(INSTALL_DATA) $(PKG_BUILD_DIR)/public-resolvers.md.minisig $(1)/etc/$(PKG_BIN)/public-resolvers.md.minisig
+	$$(INSTALL_DIR) $(1)/usr/bin
+	$$(INSTALL_BIN) $$(GO_PKG_BUILD_BIN_DIR)/$$(PKG_BIN) $(1)/usr/bin/$$(PKG_BIN)
+	$$(INSTALL_DIR) $(1)/etc/$$(PKG_BIN)
+	$$(INSTALL_DATA) $$(PKG_BUILD_DIR)/public-resolvers.md $(1)/etc/$$(PKG_BIN)/public-resolvers.md
+	$$(INSTALL_DATA) $$(PKG_BUILD_DIR)/public-resolvers.md.minisig $(1)/etc/$$(PKG_BIN)/public-resolvers.md.minisig
 endef
 
+$(eval $(call GoBinPackage,$(PKG_NAME)))
 $(eval $(call BuildPackage,$(PKG_NAME)))
+
+$(eval $(call GoSrcPackage,golang-github-jedisct1-dnscrypt-proxy-dev))
+$(eval $(call BuildPackage,golang-github-jedisct1-dnscrypt-proxy-dev))
