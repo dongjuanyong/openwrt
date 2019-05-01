@@ -37,7 +37,7 @@ define Package/mtk-luci-plugin/config
 	config LUCI_APP_WEBCONSOLE
 	bool "luci-app-webconsole"
 	depends on PACKAGE_mtk-luci-plugin
-	default y
+	default n
 	help
 	  "LuCI plugin for access shell from web"
 endef
