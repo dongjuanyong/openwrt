@@ -1,0 +1,11 @@
+#!/bin/sh
+
+uci -q batch <<-EOF >/dev/null
+	delete ucitrack.@dnscrypt-proxy2[-1]
+	add ucitrack dnscrypt-proxy2
+	set ucitrack.@dnscrypt-proxy2[-1].init=dnscrypt-proxy2
+	commit ucitrack
+EOF
+
+rm -f /tmp/luci-indexcache
+exit 0

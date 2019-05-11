@@ -6,7 +6,7 @@
 
 include $(TOPDIR)/rules.mk
 
-PKG_NAME:=dnscrypt-proxy_2
+PKG_NAME:=dnscrypt-proxy2
 PKG_VERSION:=2.0.23
 PKG_RELEASE:=1
 
@@ -47,7 +47,7 @@ $(call GoPackage/GoSubMenu)
 endef
 
 define Package/golang-github-jedisct1-dnscrypt-proxy-dev/description
-$(call Package/dnscrypt-proxy_2/description)
+$(call Package/dnscrypt-proxy2/description)
 
 This package provides the source files for the dnscrypt-proxy.
 endef

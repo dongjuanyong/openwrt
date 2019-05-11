@@ -6,7 +6,7 @@
 include $(TOPDIR)/rules.mk
 
 LUCI_TITLE:=LuCI support for V2Ray
-LUCI_DEPENDS:=+iptables-mod-tproxy +kmod-ipt-tproxy +ip +ipset-lists +pdnsd-alt +coreutils +coreutils-base64 +coreutils-nohup +dnsmasq-full +v2ray +ca-certificates +lua-cjson +luci-app-dnscrypt-proxy_2
+LUCI_DEPENDS:=+iptables-mod-tproxy +kmod-ipt-tproxy +ip +ipset-lists +pdnsd-alt +coreutils +coreutils-base64 +coreutils-nohup +dnsmasq-full +v2ray +ca-certificates +lua-cjson +luci-app-dnscrypt-proxy2
 LUCI_PKGARCH:=all
 PKG_VERSION:=1.1
 PKG_RELEASE:=1

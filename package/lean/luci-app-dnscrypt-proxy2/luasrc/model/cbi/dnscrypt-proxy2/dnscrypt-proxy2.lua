@@ -1,8 +1,8 @@
 
-mp = Map("dnscrypt-proxy_2", translate("dnscrypt-proxy 2"))
+mp = Map("dnscrypt-proxy2", translate("dnscrypt-proxy 2"))
 mp.description = translate("A flexible DNS proxy, with support for modern encrypted DNS protocols such as DNSCrypt v2 and DNS-over-HTTPS.")
 
-mp:section(SimpleSection).template  = "dnscrypt-proxy_2/dnscrypt-proxy_2_status"
+mp:section(SimpleSection).template  = "dnscrypt-proxy2/dnscrypt-proxy2_status"
 
 s = mp:section(NamedSection, "dnscrypt", "service")
 s.anonymouse = true
