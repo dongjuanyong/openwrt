@@ -75,6 +75,14 @@ define Device/seama
   SEAMA_SIGNATURE :=
 endef
 
+define Device/aruba_ap-105
+  ATH_SOC := ar7161
+  DEVICE_TITLE := Aruba AP-105
+  IMAGE_SIZE := 16000k
+  DEVICE_PACKAGES := kmod-i2c-core kmod-i2c-gpio kmod-tpm-i2c-atmel
+endef
+TARGET_DEVICES += aruba_ap-105
+
 define Device/avm_fritz300e
   ATH_SOC := ar7242
   DEVICE_TITLE := AVM FRITZ!WLAN Repeater 300E
@@ -301,6 +309,18 @@ define Device/embeddedwireless_dorin
   IMAGE_SIZE := 16000k
 endef
 TARGET_DEVICES += embeddedwireless_dorin
+
+define Device/engenius_ecb1750
+  ATH_SOC := qca9558
+  DEVICE_TITLE := EnGenius ECB1750
+  DEVICE_PACKAGES := kmod-ath10k-ct ath10k-firmware-qca988x-ct
+  IMAGE_SIZE := 15680k
+  IMAGE/factory.bin := append-kernel | pad-to $$$$(BLOCKSIZE) | \
+    append-rootfs | pad-rootfs | check-size $$$$(IMAGE_SIZE) | \
+    senao-header -r 0x101 -p 0x6d -t 2
+  IMAGE/sysupgrade.bin := append-kernel | append-rootfs | pad-rootfs | append-metadata | check-size $$$$(IMAGE_SIZE)
+endef
+TARGET_DEVICES += engenius_ecb1750
 
 define Device/engenius_epg5000
   ATH_SOC := qca9558
