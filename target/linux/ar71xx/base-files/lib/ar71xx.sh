@@ -1330,6 +1330,9 @@ ar71xx_board_detect() {
 	*"TL-WDR6500 v2")
 		name="tl-wdr6500-v2"
 		;;
+	*"TL-WDR6500 v6")
+		name="tl-wdr6500-v6"
+		;;
 	*"TL-WPA8630")
 		name="tl-wpa8630"
 		;;
