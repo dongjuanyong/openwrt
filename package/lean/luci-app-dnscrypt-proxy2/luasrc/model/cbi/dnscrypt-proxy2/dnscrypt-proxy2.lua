@@ -89,7 +89,7 @@ cache = s:option(Flag, "cache", translate("Enable DNS cache"))
 cache.default = 1
 cache.rmempty = false
 
-local addconf = "/etc/dnscrypt-proxy/addconf"
+local addconf = "/etc/dnscrypt-proxy2/addconf"
 
 addin = s:option(TextValue, "addinconf", translate(""), translate("Put additional configurations here."))
 addin.rows = 5
