@@ -79,8 +79,8 @@ create_config() {
 	fi
 
 	echo "[static]" >> $config_file
-	if [ -s /etc/dnscrypt-proxy/addconf ] ; then
-		cat /etc/dnscrypt-proxy/addconf >> $config_file
+	if [ -s /etc/dnscrypt-proxy2/addconf ] ; then
+		cat /etc/dnscrypt-proxy2/addconf >> $config_file
 	fi
 }
 
