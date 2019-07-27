@@ -117,7 +117,7 @@ return L.view.extend({
 		o.editable = true;
 
 		o = s.taboption('general', form.Flag, 'fullcone', _('Full Cone'));
-		o.editable = true;
+		o.modalonly = true;
 
 		o = s.taboption('general', form.Flag, 'mtu_fix', _('MSS clamping'));
 		o.modalonly = true;
