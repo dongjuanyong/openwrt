@@ -15,24 +15,31 @@ https_port="$(uci get unblockmusic.@unblockmusic[0].https_port)"
 
 set_firewall(){
 	if [ "${set_type}" = "start" ]; then
-		echo "ipset=/.music.163.com/music" >> /etc/dnsmasq.conf
+		mkdir -p /tmp/dnsmasq.d
+		echo "ipset=/music.163.com/music" > /tmp/dnsmasq.d/unblockmusic
+		echo "ipset=/interface.music.163.com/music" >> /tmp/dnsmasq.d/unblockmusic
 		/etc/init.d/dnsmasq restart >/dev/null 2>&1
 
 		mkdir -p /var/etc
 		lan_addr="$(uci get network.lan.ipaddr)"
 		[ "$(uci get unblockmusic.@unblockmusic[0].ipset_forward_nohttps)" -ne "0" ] || forward_https="iptables -t nat -A cloud_music -i br-lan -p tcp --dport 443 -j DNAT --to ${lan_addr}:${https_port}"
 		cat > "/var/etc/unblockmusic.include" <<-EOF
+iptables -t nat -D prerouting_rule -i br-lan -p tcp -m set --match-set music dst -j cloud_music 2>/dev/null
+iptables -t nat -F cloud_music 2>/dev/null
+iptables -t nat -X cloud_music 2>/dev/null
 if ! ipset list music >/dev/null; then ipset create music hash:ip; fi
 iptables -t nat -N cloud_music
 iptables -t nat -A cloud_music -i br-lan -p tcp --dport 80 -j DNAT --to ${lan_addr}:${http_port}
 ${forward_https}
 iptables -t nat -A prerouting_rule -i br-lan -p tcp -m set --match-set music dst -j cloud_music
 		EOF
-		/etc/init.d/firewall restart >/dev/null 2>&1
+		sh /var/etc/unblockmusic.include
 	elif [ "${set_type}" = "stop" ]; then
 		echo "" > /var/etc/unblockmusic.include
-		/etc/init.d/firewall restart >/dev/null 2>&1
-		sed -i '/ipset=\/.music.163.com\/music/d' /etc/dnsmasq.conf
+		iptables -t nat -D prerouting_rule -i br-lan -p tcp -m set --match-set music dst -j cloud_music 2>/dev/null
+		iptables -t nat -F cloud_music 2>/dev/null
+		iptables -t nat -X cloud_music 2>/dev/null
+		rm -f /tmp/dnsmasq.d/unblockmusic
 		/etc/init.d/dnsmasq restart >/dev/null 2>&1
 	fi
 }
@@ -56,15 +63,15 @@ set_hosts(){
 
 		ip route add 223.252.199.10 dev lo
 	elif [ "${set_type}" = "stop" ]; then
-		music_id1="$(uci show dhcp| grep "interface.music.163.com"| grep -Eo "domain\[[0-9]+\]"| grep -Eo "[0-9]+")"
+		music_id1="$(uci show dhcp| grep "interface"| grep -Eo "domain\[[0-9]+\]"| grep -Eo "[0-9]+")"
 		uci delete dhcp.@domain["${music_id1}"]
 		uci commit dhcp
 
-		music_id2="$(uci show dhcp| grep "music.httpdns.c.163.com"| grep -Eo "domain\[[0-9]+\]"| grep -Eo "[0-9]+")"
+		music_id2="$(uci show dhcp| grep "httpdns"| grep -Eo "domain\[[0-9]+\]"| grep -Eo "[0-9]+")"
 		uci delete dhcp.@domain["${music_id2}"]
 		uci commit dhcp
 
-		music_id3="$(uci show dhcp| grep "music.163.com"| grep -Eo "domain\[[0-9]+\]"| grep -Eo "[0-9]+")"
+		music_id3="$(uci show dhcp| grep "music"| grep -Eo "domain\[[0-9]+\]"| grep -Eo "[0-9]+")"
 		uci delete dhcp.@domain["${music_id3}"]
 		uci commit dhcp
 
