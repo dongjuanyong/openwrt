@@ -96,7 +96,7 @@ start()
 	[ "$(uci get unblockmusic.@unblockmusic[0].enable_ipset_forward)" -ne "0" ] && set_type="start" && set_firewall
 	[ "$(uci get unblockmusic.@unblockmusic[0].use_hosts)" -ne "0" ] && set_type="start" && set_hosts
 
-	/usr/share/unblockmusic/logcheck.sh >/dev/null 2>&1 &
+	/usr/share/logcheck.sh >/dev/null 2>&1 &
 }
 
 stop()
