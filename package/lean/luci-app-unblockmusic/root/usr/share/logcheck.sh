@@ -3,7 +3,7 @@
 # https://github.com/project-openwrt
 
 log_max_size="4" #使用KB计算
-log_file="/tmp/unblockneteasemusic.log"
+log_file="/tmp/unblockmusic.log"
 
 while true
 do
