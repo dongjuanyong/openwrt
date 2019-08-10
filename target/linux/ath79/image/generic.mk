@@ -262,6 +262,7 @@ define Device/comfast_cf-e314n-v2
   DEVICE_MODEL := CF-E314N
   DEVICE_VARIANT := v2
   DEVICE_PACKAGES := rssileds
+  IMAGE_SIZE := 7936k
 endef
 TARGET_DEVICES += comfast_cf-e314n-v2
 
@@ -274,6 +275,26 @@ define Device/comfast_cf-e5
   IMAGE_SIZE := 16192k
 endef
 TARGET_DEVICES += comfast_cf-e5
+
+define Device/comfast_cf-wr650ac-v1
+  ATH_SOC := qca9558
+  DEVICE_VENDOR := COMFAST
+  DEVICE_MODEL := CF-WR650AC
+  DEVICE_VARIANT := v1
+  DEVICE_PACKAGES := kmod-ath10k-ct ath10k-firmware-qca988x-ct
+  IMAGE_SIZE := 16128k
+endef
+TARGET_DEVICES += comfast_cf-wr650ac-v1
+
+define Device/comfast_cf-wr650ac-v2
+  ATH_SOC := qca9558
+  DEVICE_VENDOR := COMFAST
+  DEVICE_MODEL := CF-WR650AC
+  DEVICE_VARIANT := v2
+  DEVICE_PACKAGES := kmod-ath10k-ct ath10k-firmware-qca988x-ct
+  IMAGE_SIZE := 16000k
+endef
+TARGET_DEVICES += comfast_cf-wr650ac-v2
 
 define Device/devolo_dvl1200e
   ATH_SOC := qca9558
@@ -407,23 +428,23 @@ define Device/dlink_dir-842-c
 endef
 
 define Device/dlink_dir-842-c1
-	$(Device/dlink_dir-842-c)
-	DEVICE_VARIANT := C1
-	DEVICE_PACKAGES := kmod-ath10k-ct ath10k-firmware-qca9888-ct
+  $(Device/dlink_dir-842-c)
+  DEVICE_VARIANT := C1
+  DEVICE_PACKAGES := kmod-ath10k-ct ath10k-firmware-qca9888-ct
 endef
 TARGET_DEVICES += dlink_dir-842-c1
 
 define Device/dlink_dir-842-c2
-	$(Device/dlink_dir-842-c)
-	DEVICE_VARIANT := C2
-	DEVICE_PACKAGES := kmod-usb2 kmod-ath10k-ct ath10k-firmware-qca9888-ct
+  $(Device/dlink_dir-842-c)
+  DEVICE_VARIANT := C2
+  DEVICE_PACKAGES := kmod-usb2 kmod-ath10k-ct ath10k-firmware-qca9888-ct
 endef
 TARGET_DEVICES += dlink_dir-842-c2
 
 define Device/dlink_dir-842-c3
-	$(Device/dlink_dir-842-c)
-	DEVICE_VARIANT := C3
-	DEVICE_PACKAGES := kmod-ath10k-ct ath10k-firmware-qca9888-ct
+  $(Device/dlink_dir-842-c)
+  DEVICE_VARIANT := C3
+  DEVICE_PACKAGES := kmod-ath10k-ct ath10k-firmware-qca9888-ct
 endef
 TARGET_DEVICES += dlink_dir-842-c3
 
