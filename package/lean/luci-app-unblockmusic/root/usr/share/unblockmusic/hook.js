@@ -46,6 +46,7 @@ hook.target.path = [
 	'/api/v1/artist/songs',
 	'/api/artist/top/song',
 	'/api/v1/album',
+	'/api/album/v3/detail',
 	'/api/playlist/privilege',
 	'/api/song/enhance/player/url',
 	'/api/song/enhance/player/url/v1',
@@ -64,7 +65,7 @@ hook.target.path = [
 
 hook.request.before = ctx => {
 	const req = ctx.req
-	req.url = (req.url.startsWith('http://') ? '' : (req.socket.encrypted ? 'https:' : 'http:') + '//music.163.com') + req.url
+	req.url = (req.url.startsWith('http://') ? '' : (req.socket.encrypted ? 'https:' : 'http:') + '//' + (hook.target.host.includes(req.headers.host) ? req.headers.host : null)) + req.url
 	const url = parse(req.url)
 	if([url.hostname, req.headers.host].some(host => hook.target.host.includes(host)) && req.method == 'POST' && (url.path == '/api/linux/forward' || url.path.startsWith('/eapi/'))){
 		return request.read(req)
@@ -98,7 +99,7 @@ hook.request.before = ctx => {
 		})
 		.catch(error => console.log(error, ctx.req.url))
 	}
-	if((hook.target.host.includes(url.hostname)) && url.path.startsWith('/weapi/')){
+	else if((hook.target.host.includes(url.hostname)) && url.path.startsWith('/weapi/')){
 		ctx.req.headers['X-Real-IP'] = '118.88.88.88'
 		ctx.netease = {web: true, path: url.path.replace(/^\/weapi\//, '/api/').replace(/\?.+$/, '').replace(/\/\d*$/, '')}
 	}
@@ -169,7 +170,12 @@ hook.request.after = ctx => {
 		.catch(error => console.log(error, ctx.req.url))
 	}
 	else if(package){
-		if(/p\d+c*.music.126.net/.test(ctx.req.url)){
+		const req = ctx.req
+		if([201, 301, 302, 303, 307, 308].includes(proxyRes.statusCode)){
+			return request(req.method, parse(req.url).resolve(proxyRes.headers.location), req.headers)
+			.then(response => ctx.proxyRes = response)
+		}
+		else if(/p\d+c*.music.126.net/.test(ctx.req.url)){
 			proxyRes.headers['content-type'] = 'audio/mpeg'
 		}
 	}
@@ -274,9 +280,9 @@ const tryMatch = ctx => {
 			.then(song => {
 				item.url = global.endpoint ? `${global.endpoint}/package/${crypto.base64.encode(song.url)}/${item.id}.mp3` : song.url
 				item.md5 = song.md5 || crypto.md5.digest(song.url)
+				item.br = song.br || 128000
 				item.size = song.size
 				item.code = 200
-				item.br = 320000
 				item.type = 'mp3'
 				return song
 			})
