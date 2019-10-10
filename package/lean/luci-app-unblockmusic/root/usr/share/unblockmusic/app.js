@@ -59,18 +59,21 @@ const escape = string => string.replace(/\./g, '\\.')
 
 global.port = config.port
 global.proxy = config.proxyUrl ? parse(config.proxyUrl) : null
-global.hosts = {}, hook.target.host.forEach(host => global.hosts[host] = config.forceHost)
+global.hosts = hook.target.host.reduce((result, host) => Object.assign(result, {[host]: config.forceHost}), {})
 server.whitelist = ['music.126.net', 'vod.126.net'].map(escape)
 if(config.strict) server.blacklist.push('.*')
 server.authentication = config.token || null
 global.endpoint = config.endpoint
 if(config.endpoint) server.whitelist.push(escape(config.endpoint))
 
+hosts['music.httpdns.c.163.com'] = ['223.252.199.66', '59.111.160.195'][Math.round(Math.random())]
+hosts['httpdns.n.netease.com'] = ['59.111.179.213', '59.111.179.214'][Math.round(Math.random())]
+
 const dns = host => new Promise((resolve, reject) => require('dns').lookup(host, {all: true}, (error, records) => error ? reject(error) : resolve(records.map(record => record.address))))
 const httpdns = host => require('./request')('POST', 'https://music.httpdns.c.163.com/d', {}, host).then(response => response.json()).then(jsonBody => jsonBody.dns.reduce((result, domain) => result.concat(domain.ips), []))
 const httpdns2 = host => require('./request')('GET', 'https://httpdns.n.netease.com/httpdns/v2/d?domain=' + host).then(response => response.json()).then(jsonBody => Object.keys(jsonBody.data).map(key => jsonBody.data[key]).reduce((result, value) => result.concat(value.ip || []), []))
 
-Promise.all([httpdns].map(query => query(hook.target.host.join(','))).concat(hook.target.host.map(host => dns(host))))
+Promise.all([httpdns, httpdns2].map(query => query(hook.target.host.join(','))).concat(hook.target.host.map(host => dns(host))))
 .then(result => {
 	let extra = Array.from(new Set(result.reduce((merged, array) => merged.concat(array), [])))
 	hook.target.host = hook.target.host.concat(extra)

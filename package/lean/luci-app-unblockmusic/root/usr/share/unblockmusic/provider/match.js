@@ -14,7 +14,7 @@ const provider = {
 
 const match = (id, source) => {
 	let meta = {}
-	let candidate = (source || global.source || ['qq', 'xiami', 'baidu']).filter(name => name in provider)
+	let candidate = (source || global.source || ['qq', 'kuwo', 'migu']).filter(name => name in provider)
 	return find(id)
 	.then(info => {
 		meta = info
@@ -36,7 +36,7 @@ const check = url => {
 	let song = {size: 0, br: null, url: null, md5: null}
 	return Promise.race([request('GET', url, {'range': 'bytes=0-8191'}), new Promise((_, reject) => setTimeout(() => reject(504), 5 * 1000))])
 	.then(response => {
-		if(!response.statusCode.toString().startsWith('2')) return
+		if(!response.statusCode.toString().startsWith('2')) return Promise.reject()
 		if(url.includes('qq.com'))
 			song.md5 = response.headers['server-md5']
 		else if(url.includes('xiami.net') || url.includes('qianqian.com'))

@@ -31,7 +31,10 @@ ip route del 223.252.199.10 2>/dev/null
 iptables -t nat -D prerouting_rule -p tcp -m set --match-set music dst -j cloud_music 2>/dev/null
 iptables -t nat -F cloud_music 2>/dev/null
 iptables -t nat -X cloud_music 2>/dev/null
-if ! ipset list music >/dev/null; then ipset create music hash:ip; fi
+if ! ipset list music >/dev/null; then
+	ipset create music hash:ip
+	wget http://httpdns.n.netease.com/httpdns/v2/d?domain=music.163.com,interface.music.163.com,interface3.music.163.com,apm.music.163.com,apm3.music.163.com,clientlog.music.163.com,clientlog3.music.163.com -O- | grep -Eo '[0-9]+?\.[0-9]+?\.[0-9]+?\.[0-9]+?' | sort | uniq | awk '{print "ipset -! add music "$1}' | sh
+fi
 iptables -t nat -N cloud_music
 iptables -t nat -A cloud_music -p tcp --dport 80 -j REDIRECT --to-ports ${http_port}
 ${forward_https}
