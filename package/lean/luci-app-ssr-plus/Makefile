@@ -43,7 +43,7 @@ define Package/luci-app-ssr-plus
 	DEPENDS:=+shadowsocksr-libev-alt +ipset +ip-full +iptables-mod-tproxy +dnsmasq-full +coreutils +coreutils-base64 +bash +pdnsd-alt +wget \
             +PACKAGE_$(PKG_NAME)_INCLUDE_Shadowsocks:shadowsocks-libev-ss-redir \
             +PACKAGE_$(PKG_NAME)_INCLUDE_V2ray:v2ray \
-            +PACKAGE_$(PKG_NAME)_INCLUDE_Kcptun:kcptun-client \
+            +PACKAGE_$(PKG_NAME)_INCLUDE_Kcptun:kcptun-c \
             +PACKAGE_$(PKG_NAME)_INCLUDE_ShadowsocksR_Server:shadowsocksr-libev-server \
             +PACKAGE_$(PKG_NAME)_INCLUDE_ShadowsocksR_Socks:shadowsocksr-libev-ssr-local
 endef
@@ -70,6 +70,7 @@ if [ -z "$${IPKG_INSTROOT}" ]; then
 	rm -f /tmp/luci-indexcache
 	chmod 755 /etc/init.d/shadowsocksr >/dev/null 2>&1
 	/etc/init.d/shadowsocksr enable >/dev/null 2>&1
+	[ -s "/usr/bin/kcptun-c" ] && ln -s /usr/bin/kcptun-c /usr/bin/kcptun-client >/dev/null 2>&1
 fi
 exit 0
 endef
