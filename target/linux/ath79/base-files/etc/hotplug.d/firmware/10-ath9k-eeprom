@@ -60,7 +60,7 @@ xor() {
 ath9k_patch_fw_mac() {
 	local mac=$1
 	local mac_offset=$(($2))
-	local chksum_offset=$(($3))
+	local chksum_offset=$3
 	local xor_mac
 	local xor_fw_mac
 	local xor_fw_chksum
@@ -78,7 +78,7 @@ ath9k_patch_fw_mac() {
 		xor_fw_chksum=$(xor $xor_fw_chksum $xor_fw_mac $xor_mac)
 
 		printf "%b" "\x${xor_fw_chksum:0:2}\x${xor_fw_chksum:2:2}" | \
-			dd of=/lib/firmware/$FIRMWARE conv=notrunc bs=1 seek=$chksum_offset count=2
+			dd of=/lib/firmware/$FIRMWARE conv=notrunc bs=1 seek=$(($chksum_offset)) count=2
 	}
 
 	macaddr_2bin $mac | dd of=/lib/firmware/$FIRMWARE conv=notrunc oflag=seek_bytes bs=6 seek=$mac_offset count=1
@@ -103,7 +103,7 @@ case "$FIRMWARE" in
 	dlink,dir-825-c1|\
 	dlink,dir-835-a1)
 		ath9k_eeprom_extract "art" 0x1000 0x440
-		ath9k_patch_fw_mac_crc $(mtd_get_mac_text "mac" 0x4) 0x2
+		ath9k_patch_fw_mac $(mtd_get_mac_text "mac" 0x4) 0x2
 		;;
 	dlink,dir-842-c1|\
 	dlink,dir-842-c2|\
@@ -156,7 +156,7 @@ case "$FIRMWARE" in
 	dlink,dir-825-c1|\
 	dlink,dir-835-a1)
 		ath9k_eeprom_extract "art" 0x5000 0x440
-		ath9k_patch_fw_mac_crc $(macaddr_add $(mtd_get_mac_text "mac" 0x18) 1) 0x2
+		ath9k_patch_fw_mac $(macaddr_add $(mtd_get_mac_text "mac" 0x18) 1) 0x2
 		;;
 	ocedo,raccoon|\
 	tplink,tl-wdr3500-v1|\
@@ -196,7 +196,7 @@ case "$FIRMWARE" in
 		;;
 	wd,mynet-wifi-rangeextender)
 		ath9k_eeprom_extract "art" 0x1000 0x1000
-		ath9k_patch_fw_mac_crc $(nvram get wl0_hwaddr) "$mac" 0x2
+		ath9k_patch_fw_mac $(nvram get wl0_hwaddr) "$mac" 0x2
 		;;
 	*)
 		ath9k_eeprom_die "board $board is not supported yet"
@@ -208,7 +208,8 @@ case "$FIRMWARE" in
 	buffalo,wzr-hp-ag300h|\
 	netgear,wndr3700|\
 	netgear,wndr3700v2|\
-	netgear,wndr3800)
+	netgear,wndr3800|\
+	netgear,wndr3800ch)
 		ath9k_eeprom_extract "art" 0x1000 0xeb8
 		;;
 	dlink,dir-825-b1)
@@ -225,7 +226,8 @@ case "$FIRMWARE" in
 	buffalo,wzr-hp-ag300h|\
 	netgear,wndr3700|\
 	netgear,wndr3700v2|\
-	netgear,wndr3800)
+	netgear,wndr3800|\
+	netgear,wndr3800ch)
 		ath9k_eeprom_extract "art" 0x5000 0xeb8
 		;;
 	dlink,dir-825-b1)
