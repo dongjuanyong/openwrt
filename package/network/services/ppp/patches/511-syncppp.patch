@@ -184,16 +184,15 @@ diff -Naur ppp-2.4.5.0/pppd/syncppp.h ppp-2.4.5/pppd/syncppp.h
 diff -Naur ppp-2.4.5.0/pppd/upap.c ppp-2.4.5/pppd/upap.c
 --- ppp-2.4.5.0/pppd/upap.c	2012-04-18 15:44:46.000000000 +0800
 +++ ppp-2.4.5/pppd/upap.c	2012-04-19 20:26:22.000000000 +0800
-@@ -52,6 +52,8 @@
+@@ -52,6 +52,7 @@
  #include "pppd.h"
  #include "upap.h"
  
 +#include "syncppp.h"
-+
- static const char rcsid[] = RCSID;
  
  static bool hide_password = 1;
-@@ -568,6 +570,18 @@
+ 
+@@ -567,6 +568,18 @@
      PUTCHAR(u->us_passwdlen, outp);
      BCOPY(u->us_passwd, outp, u->us_passwdlen);
  
