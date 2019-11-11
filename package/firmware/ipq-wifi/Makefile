@@ -25,6 +25,7 @@ endef
 
 ALLWIFIBOARDS:= \
 	rt-acrh17 \
+	avm_fritzrepeater-1200 \
 	linksys_ea8300 \
 	qxwlan_e2600ac
 
@@ -90,6 +91,7 @@ endef
 # Add $(eval $(call generate-ipq-wifi-package,<devicename>,<display name>))
 
 $(eval $(call generate-ipq-wifi-package,rt-acrh17,board-rt-acrh17.bin,ASUS RT-ACRH17/RT-AC82U/RT-AC42U))
+$(eval $(call generate-ipq-wifi-package,avm_fritzrepeater-1200,AVM FRITZRepeater 1200))
 $(eval $(call generate-ipq-wifi-package,linksys_ea8300,Linksys EA8300))
 $(eval $(call generate-ipq-wifi-package,qxwlan_e2600ac,Qxwlan E2600AC))
 

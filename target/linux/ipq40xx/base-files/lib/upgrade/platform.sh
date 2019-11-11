@@ -161,6 +161,7 @@ platform_do_upgrade() {
 	case "$(board_name)" in
 	8dev,jalapeno |\
 	avm,fritzbox-7530 |\
+	avm,fritzrepeater-1200 |\
 	avm,fritzrepeater-3000 |\
 	qxwlan,e2600ac-c2)
 		nand_do_upgrade "$1"
@@ -191,6 +192,9 @@ platform_do_upgrade() {
 		else
 			asus_nand_upgrade_tar 20951040 "$1"
 		fi
+		;;
+	compex,wpj419)
+		nand_do_upgrade "$1"
 		;;
 	linksys,ea6350v3 |\
 	linksys,ea8300)
