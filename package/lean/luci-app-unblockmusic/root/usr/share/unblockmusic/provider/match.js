@@ -9,7 +9,8 @@ const provider = {
 	kugou: require('./kugou'),
 	kuwo: require('./kuwo'),
 	migu: require('./migu'),
-	joox: require('./joox')
+	joox: require('./joox'),
+	youtube: require('./youtube')
 }
 
 const match = (id, source) => {
@@ -69,6 +70,7 @@ const decode = buffer => {
 	map[0] = map[2]
 
 	let pointer = 0
+	if(buffer.slice(0, 4).toString() === 'fLaC') return 999
 	if(buffer.slice(0, 3).toString() === 'ID3'){
 		pointer = 6
 		let size = buffer.slice(pointer, pointer + 4).reduce((summation, value, index) => summation + (value & 0x7f) << (7 * (3 - index)), 0)
