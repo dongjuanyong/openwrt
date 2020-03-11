@@ -13,14 +13,15 @@ __target_inc=1
 DEVICE_TYPE?=router
 
 # Default packages - the really basic set
-DEFAULT_PACKAGES:=base-files libc libgcc busybox dropbear mtd uci opkg netifd fstools uclient-fetch logd urandom-seed urngd block-mount coremark \
-kmod-nf-nathelper kmod-nf-nathelper-extra kmod-ipt-raw wget libustream-openssl ca-certificates \
-default-settings luci luci-app-ddns luci-app-sqm luci-app-upnp luci-app-adbyby-plus luci-app-autoreboot \
-luci-app-filetransfer luci-app-vsftpd ddns-scripts_aliyun luci-app-ssr-plus \
-luci-app-pptp-server luci-app-arpbind luci-app-vlmcsd luci-app-wifischedule luci-app-wol luci-app-ramfree \
-luci-app-sfe luci-app-flowoffload luci-app-nlbwmon luci-app-usb-printer luci-app-accesscontrol luci-app-zerotier luci-app-xlnetacc
+DEFAULT_PACKAGES:=base-files libc libgcc busybox dropbear mtd uci opkg netifd fstools uclient-fetch logd urandom-seed urngd \
+block-mount coremark kmod-nf-nathelper kmod-nf-nathelper-extra kmod-ipt-raw wget libustream-openssl ca-certificates \
+default-settings luci luci-proto-relay luci-app-ddns luci-app-sqm luci-app-upnp luci-app-adbyby-plus luci-app-autoreboot \
+luci-app-filetransfer luci-app-vsftpd luci-app-ssr-plus luci-app-unblockmusic \
+luci-app-zerotier luci-app-arpbind luci-app-vlmcsd luci-app-wol luci-app-ramfree \
+luci-app-sfe luci-app-flowoffload luci-app-nlbwmon luci-app-accesscontrol luci-app-cpufreq \
+ddns-scripts_aliyun ddns-scripts_dnspod
 # For nas targets
-DEFAULT_PACKAGES.nas:=block-mount fdisk lsblk mdadm automount autosamba luci-app-usb-printer
+DEFAULT_PACKAGES.nas:=block-mount fdisk lsblk mdadm
 # For router targets
 DEFAULT_PACKAGES.router:=dnsmasq-full iptables ip6tables ppp ppp-mod-pppoe firewall odhcpd-ipv6only odhcp6c kmod-ipt-offload kmod-tcp-bbr
 DEFAULT_PACKAGES.bootloader:=

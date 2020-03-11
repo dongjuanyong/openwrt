@@ -1,6 +1,7 @@
+local fs = require "nixio.fs"
 
-mp = Map("unblockmusic", translate("解除网易云音乐播放限制"))
-mp.description = translate("原理：采用 [网易云旧链/QQ/虾米/百度/酷狗/酷我/咕咪/JOOX] 等音源，替换网易云音乐 无版权/收费 歌曲链接<br/>具体使用方法参见：https://github.com/project-openwrt/UnblockNeteaseMusic")
+mp = Map("unblockmusic", translate("解锁网易云灰色歌曲"))
+mp.description = translate("采用 [QQ/虾米/百度/酷狗/酷我/咕咪/JOOX]等音源，替换网易云变灰歌曲链接")
 
 mp:section(SimpleSection).template  = "unblockmusic/unblockmusic_status"
 
@@ -8,99 +9,89 @@ s = mp:section(TypedSection, "unblockmusic")
 s.anonymous=true
 s.addremove=false
 
-enabled = s:option(Flag, "enabled", translate("启用本插件"))
-enabled.description = translate("启用本插件以解除网易云音乐播放限制")
+enabled = s:option(Flag, "enabled", translate("启用"))
 enabled.default = 0
 enabled.rmempty = false
+enabled.description = translate("启用后，路由器自动分流解锁，大部分设备无需设置代理")
 
-http_port = s:option(Value, "http_port", translate("[HTTP] 监听端口"))
-http_port.description = translate("本插件监听的HTTP端口，不可与其他程序/HTTPS共用一个端口")
-http_port.placeholder = "5200"
-http_port.default = "5200"
-http_port.datatype = "port"
-http_port:depends("enabled", 1)
+apptype = s:option(ListValue, "apptype", translate("解锁程序选择"))
+if nixio.fs.access("/usr/bin/UnblockNeteaseMusic") then
+apptype:value("go", translate("Golang 版本"))
+end
+if nixio.fs.access("/usr/share/UnblockNeteaseMusic/app.js") then
+apptype:value("nodejs", translate("NodeJS 版本"))
+end
+apptype:value("cloud", translate("云解锁（ [CTCGFW] 云服务器）"))
 
-https_port = s:option(Value, "https_port", translate("[HTTPS] 监听端口"))
-https_port.description = translate("[如HTTP端口设置为80，请将HTTPS端口设置为443] 本插件监听的HTTPS端口，不可与其他程序/HTTP共用一个端口")
-https_port.placeholder = "5201"
-https_port.default = "5201"
-https_port.datatype = "port"
-https_port:depends("enabled", 1)
+speedtype = s:option(Value, "musicapptype", translate("音源选择"))
+speedtype:value("default", translate("默认"))
+speedtype:value("netease", translate("网易云音乐"))
+speedtype:value("qq", translate("QQ音乐"))
+speedtype:value("xiami", translate("虾米音乐"))
+speedtype:value("baidu", translate("百度音乐"))
+speedtype:value("kugou", translate("酷狗音乐"))
+speedtype:value("kuwo", translate("酷我音乐(高音质/FLACの解锁可能性)"))
+speedtype:value("migu", translate("咕咪音乐"))
+speedtype:value("joox", translate("JOOX音乐"))
+speedtype.default = "kuwo"
+speedtype:depends("apptype", "nodejs")
+speedtype:depends("apptype", "go")
 
-musicapptype = s:option(ListValue, "musicapptype", translate("音源接口"))
-musicapptype:value("default", translate("默认"))
-musicapptype:value("netease", translate("网易云音乐"))
-musicapptype:value("qq", translate("QQ音乐"))
-musicapptype:value("xiami", translate("虾米音乐"))
-musicapptype:value("baidu", translate("百度音乐"))
-musicapptype:value("kugou", translate("酷狗音乐"))
-musicapptype:value("kuwo", translate("酷我音乐"))
-musicapptype:value("migu", translate("咕咪音乐"))
-musicapptype:value("joox", translate("JOOX音乐"))
-musicapptype:value("all", translate("所有平台"))
-musicapptype.description = translate("音源调用接口")
-musicapptype.default = "default"
-musicapptype:depends("enabled", 1)
+cloudserver = s:option(Value, "cloudserver", translate("服务器位置"))
+cloudserver:value("cdn-shanghai.service.project-openwrt.eu.org:30000:30001", translate("[CTCGFW] 腾讯云上海（高音质）"))
+cloudserver:value("hyird.xyz:30000:30001", translate("[hyird] 阿里云北京（高音质）"))
+cloudserver:value("39.96.56.58:30000:30000", translate("[Sunsky] 阿里云北京（高音质）"))
+cloudserver:value("cdn-henan.service.project-openwrt.eu.org:33221:33222",translate("[CTCGFW] 移动河南（无损音质）"))
+cloudserver.description = translate("自定义服务器格式为 IP[域名]:HTTP端口:HTTPS端口<br />如果服务器为LAN内网IP，需要将这个服务器IP放入例外客户端 (不代理HTTP和HTTPS)")
+cloudserver.default = "cdn-shanghai.service.project-openwrt.eu.org:30000:30001"
+cloudserver.rmempty = true
+cloudserver:depends("apptype", "cloud")
 
-enable_hijack = s:option(Flag, "enable_hijack", translate("启用劫持"))
-enable_hijack.description = translate("开启后，网易云音乐相关请求会被强制劫持到本插件进行处理")
-enable_hijack.default = 0
-enable_hijack.rmempty = false
-enable_hijack:depends("enabled", 1)
+download_certificate=s:option(DummyValue,"opennewwindow",translate("HTTPS 证书"))
+download_certificate.description = translate("<input type=\"button\" class=\"cbi-button cbi-button-apply\" value=\"下载CA根证书\" onclick=\"window.open('https://raw.githubusercontent.com/nondanee/UnblockNeteaseMusic/master/ca.crt')\" /><br />Mac/iOS客户端需要安装 CA根证书并信任<br />iOS系统需要在“设置 -> 通用 -> 关于本机 -> 证书信任设置”中，信任 UnblockNeteaseMusic Root CA <br />Linux 设备请在启用时加入 --ignore-certificate-errors 参数")
 
-hijack_ways = s:option(ListValue, "hijack_ways", translate("劫持方法"))
-hijack_ways:value("use_ipset", translate("使用IPSet劫持"))
-hijack_ways:value("use_hosts", translate("使用Hosts劫持"))
-hijack_ways.description = translate("如果使用Hosts劫持，请将HTTP/HTTPS端口设置为80/443")
-hijack_ways.default = "use_ipset"
-hijack_ways:depends("enable_hijack", 1)
+o = s:option(Flag, "autoupdate")
+o.title = translate("自动检查更新主程序")
+o.default = 0
+o.rmempty = false
+o.description = translate("每天自动检测并更新到最新版本")
+o:depends("apptype", "nodejs")
 
-advanced_mode = s:option(Flag, "advanced_mode", translate("启用进阶设置"))
-advanced_mode.description = translate("仅推荐高级玩家使用")
-advanced_mode.default = 0
-advanced_mode.rmempty = false
-advanced_mode:depends("enabled", 1)
+local ver = fs.readfile("/usr/share/UnblockNeteaseMusic/core_ver") or "0.00"
 
-pub_access = s:option(Flag, "pub_access", translate("部署到公网"))
-pub_access.description = translate("默认仅监听局域网，如需提供公开访问请勾选此选项；与此同时，建议勾选“启用严格模式”")
-pub_access.default = 0
-pub_access.rmempty = false
-pub_access:depends("advanced_mode", 1)
+o = s:option(Button, "restart",translate("手动更新"))
+o.inputtitle = translate("更新核心版本")
+o.description = string.format(translate("NodeJS 解锁主程序版本") ..  "<strong><font color=\"green\">: %s </font></strong>", ver)
+o.inputstyle = "reload"
+o.write = function()
+	luci.sys.exec("/usr/share/UnblockNeteaseMusic/update_core.sh luci_update 2>&1")
+  luci.http.redirect(luci.dispatcher.build_url("admin", "services", "unblockmusic"))
+end
+o:depends("apptype", "nodejs")
 
-strict_mode = s:option(Flag, "strict_mode", translate("启用严格模式"))
-strict_mode.description = translate("若将服务部署到公网，则强烈建议使用严格模式，此模式下仅放行网易云音乐所属域名的请求")
-strict_mode.default = 0
-strict_mode.rmempty = false
-strict_mode:depends("advanced_mode", 1)
+t=mp:section(TypedSection,"acl_rule",translate("例外客户端规则"),
+translate("可以为局域网客户端分别设置不同的例外模式，默认无需设置"))
+t.template="cbi/tblsection"
+t.sortable=true
+t.anonymous=true
+t.addremove=true
 
-ipset_forward_nohttps = s:option(Flag, "ipset_forward_nohttps", translate("[IPSet] 不劫持HTTPS请求"))
-ipset_forward_nohttps.description = translate("默认同时劫持HTTP&HTTPS两种请求，如无相关需求，可勾选此选项")
-ipset_forward_nohttps.default = 0
-ipset_forward_nohttps.rmempty = false
-ipset_forward_nohttps:depends("advanced_mode", 1)
+e=t:option(Value,"ipaddr",translate("IP Address"))
+e.width="40%"
+e.datatype="ip4addr"
+e.placeholder="0.0.0.0/0"
+luci.ip.neighbors({ family = 4 }, function(entry)
+	if entry.reachable then
+		e:value(entry.dest:string())
+	end
+end)
 
-set_netease_server_ip = s:option(Flag, "set_netease_server_ip", translate("自定义网易云服务器IP"))
-set_netease_server_ip.description = translate("如手动更改了Hosts文件则必选，否则将会导致连接死循环")
-set_netease_server_ip.default = 0
-set_netease_server_ip.rmempty = false
-set_netease_server_ip:depends("advanced_mode", 1)
-
-netease_server_ip = s:option(Value, "netease_server_ip", translate("网易云服务器IP"))
-netease_server_ip.description = translate("通过 ping music.163.com 即可获得IP地址，仅限填写一个")
-netease_server_ip.default = "59.111.181.38"
-netease_server_ip.placeholder = "59.111.181.38"
-netease_server_ip.datatype = "ipaddr"
-netease_server_ip:depends("set_netease_server_ip", 1)
-
-enable_proxy = s:option(Flag, "enable_proxy", translate("使用代理服务器"))
-enable_proxy.description = translate("如您的OpenWRT/LEDE系统部署在海外，则此选项必选，否则可能无法正常使用")
-enable_proxy.default = 0
-enable_proxy.rmempty = false
-enable_proxy:depends("advanced_mode", 1)
-
-proxy_server_ip = s:option(Value, "proxy_server_ip", translate("代理服务器IP"))
-proxy_server_ip.description = translate("具体格式请参考：https://github.com/nondanee/UnblockNeteaseMusic")
-proxy_server_ip.datatype = "string"
-proxy_server_ip:depends("enable_proxy", 1)
+e=t:option(ListValue,"filter_mode",translate("例外协议"))
+e.width="40%"
+e.default="disable"
+e.rmempty=false
+e:value("disable",translate("不代理HTTP和HTTPS"))
+e:value("http",translate("不代理HTTP"))
+e:value("https",translate("不代理HTTPS"))
 
 return mp
