@@ -4,6 +4,7 @@
 
 . /lib/functions/caldata.sh
 . /lib/functions/k2t.sh
+. /lib/functions/mikrotik-caldata.sh
 
 board=$(board_name)
 
@@ -12,6 +13,17 @@ case "$FIRMWARE" in
 	case $board in
 	comfast,cf-wr650ac-v1|\
 	comfast,cf-wr650ac-v2|\
+	devolo,magic-2-wifi|\
+	ubnt,unifiac-lite|\
+	ubnt,unifiac-lr|\
+	ubnt,unifiac-mesh|\
+	ubnt,unifiac-mesh-pro|\
+	ubnt,lap-120|\
+	ubnt,litebeam-ac-gen2|\
+	ubnt,nanobeam-ac|\
+	ubnt,nanostation-ac|\
+	ubnt,nanostation-ac-loco|\
+	ubnt,unifiac-pro|\
 	yuncore,a770)
 		caldata_extract "art" 0x5000 0x844
 		;;
@@ -46,14 +58,16 @@ case "$FIRMWARE" in
 		caldata_extract "art" 0x5000 0x844
 		ath10k_patch_mac $(macaddr_add $(cat /sys/class/net/eth0/address) +1)
 		;;
-	glinet,gl-ar750|\
-	glinet,gl-ar750s)
+	glinet,gl-ar750)
 		caldata_extract "art" 0x5000 0x844
 		ath10k_patch_mac $(macaddr_add $(mtd_get_mac_binary art 0x0) +1)
 		;;
 	glinet,gl-x750)
 		caldata_extract "art" 0x5000 0x844
 		ath10k_patch_mac $(macaddr_add $(mtd_get_mac_binary art 0x0) +2)
+		;;
+	mikrotik,routerboard-wap-g-5hact2hnd)
+		mikrotik_caldata_extract "art" 0x5000 0x844
 		;;
 	nec,wg800hp)
 		caldata_extract "art" 0x5000 0x844
@@ -102,16 +116,17 @@ case "$FIRMWARE" in
 		caldata_extract "art" 0x5000 0x844
 		ath10k_patch_mac $(macaddr_add $(mtd_get_mac_binary info 0x8) +1)
 		;;
-	ubnt,unifiac-lite|\
-	ubnt,unifiac-lr|\
-	ubnt,unifiac-mesh|\
-	ubnt,unifiac-mesh-pro|\
-	ubnt,lap-120|\
-	ubnt,nanobeam-ac|\
-	ubnt,nanostation-ac|\
-	ubnt,nanostation-ac-loco|\
-	ubnt,unifiac-pro)
-		caldata_extract "EEPROM" 0x5000 0x844
+	tplink,tl-wr902ac-v1)
+		caldata_extract "art" 0x5000 0x844
+		ath10k_patch_mac $(macaddr_add $(mtd_get_mac_binary tplink 0x8) -1)
+		;;
+	esac
+	;;
+"ath10k/cal-pci-0000:01:00.0.bin")
+	case $board in
+	sitecom,wlr-8100)
+		caldata_extract "art" 0x5000 0x844
+		ath10k_patch_mac $(macaddr_add $(mtd_get_mac_ascii u-boot-env ethaddr) +1)
 		;;
 	esac
 	;;
@@ -120,6 +135,13 @@ case "$FIRMWARE" in
 	comfast,cf-e313ac)
 		caldata_extract "art" 0x5000 0x2f20
 		ath10k_patch_mac $(mtd_get_mac_binary art 0x6)
+		ln -sf /lib/firmware/ath10k/pre-cal-pci-0000\:00\:00.0.bin \
+			/lib/firmware/ath10k/QCA9888/hw2.0/board.bin
+		rm /lib/firmware/ath10k/QCA9888/hw2.0/board-2.bin
+		;;
+	comfast,cf-e560ac)
+		caldata_extract "art" 0x5000 0x2f20
+		ath10k_patch_mac $(macaddr_add $(mtd_get_mac_binary art 0x0) +2)
 		ln -sf /lib/firmware/ath10k/pre-cal-pci-0000\:00\:00.0.bin \
 			/lib/firmware/ath10k/QCA9888/hw2.0/board.bin
 		rm /lib/firmware/ath10k/QCA9888/hw2.0/board-2.bin
@@ -149,9 +171,16 @@ case "$FIRMWARE" in
 	tplink,archer-c59-v2|\
 	tplink,archer-c60-v1|\
 	tplink,archer-c60-v2|\
-	tplink,archer-c6-v2)
+	tplink,archer-c6-v2|\
+	tplink,archer-c6-v2-us)
 		caldata_extract "art" 0x5000 0x2f20
 		ath10k_patch_mac $(macaddr_add $(mtd_get_mac_binary mac 0x8) -1)
+		ln -sf /lib/firmware/ath10k/pre-cal-pci-0000\:00\:00.0.bin \
+			/lib/firmware/ath10k/QCA9888/hw2.0/board.bin
+		;;
+	yuncore,a782|\
+	yuncore,xd4200)
+		caldata_extract "art" 0x5000 0x2f20
 		ln -sf /lib/firmware/ath10k/pre-cal-pci-0000\:00\:00.0.bin \
 			/lib/firmware/ath10k/QCA9888/hw2.0/board.bin
 		;;
