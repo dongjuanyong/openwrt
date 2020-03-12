@@ -70,7 +70,7 @@ ifneq ($(CONFIG_GRUB_IMAGES)$(CONFIG_EFI_IMAGES),)
   ifneq ($(CONFIG_EFI_IMAGES),)
 
   define Image/cmdline/efi
-    $(subst $(SIGNATURE)-02,$2,$(call Image/cmdline/$(1)))
+    $(subst $(IMG_PART_SIGNATURE)-02,$2,$(call Image/cmdline/$(1)))
   endef
 
 # Support for secure boot, i.e. signing efi binaries
@@ -165,7 +165,7 @@ ifneq ($(CONFIG_GRUB_IMAGES)$(CONFIG_EFI_IMAGES),)
 	mkfs.fat -C $(KDIR)/kernel.efi -S 512 1024
 	mcopy -s -i "$(KDIR)/kernel.efi" $(KDIR)/grub2.efi/* ::/
 
-	SIGNATURE="$(SIGNATURE)" PATH="$(TARGET_PATH)" ./gen_image_efi.sh \
+	SIGNATURE="$(IMG_PART_SIGNATURE)" PATH="$(TARGET_PATH)" ./gen_image_efi.sh \
 		$(BIN_DIR)/$(IMG_PREFIX)-uefi-gpt-$(1).img \
 		$(CONFIG_TARGET_KERNEL_PARTSIZE) $(KDIR)/root.grub \
 		1 $(KDIR)/kernel.efi \
