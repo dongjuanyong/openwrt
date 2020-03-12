@@ -31,10 +31,6 @@ case "$FIRMWARE" in
 		/usr/bin/fritz_cal_extract -i 1 -s 0x3C800 -e 0x212 -l 12064 -o /lib/firmware/$FIRMWARE $(find_mtd_chardev "urlader1") || \
 		/usr/bin/fritz_cal_extract -i 1 -s 0x3C000 -e 0x212 -l 12064 -o /lib/firmware/$FIRMWARE $(find_mtd_chardev "urlader1")
 		;;
-	asus,rt-acrh17)
-		CI_UBIPART=UBI_DEV
-		ath10kcal_ubi_extract "Factory" 36864 12064
-		;;
 	engenius,eap2200 |\
 	openmesh,a62)
 		caldata_extract "0:ART" 0x9000 0x2f20
@@ -66,7 +62,6 @@ case "$FIRMWARE" in
 	asus,map-ac2200)
 		caldata_extract_ubi "Factory" 0x1000 0x2f20
 		;;
-	asus,rt-acrh17|\
 	asus,rt-ac58u)
 		CI_UBIPART=UBI_DEV
 		caldata_extract_ubi "Factory" 0x1000 0x2f20

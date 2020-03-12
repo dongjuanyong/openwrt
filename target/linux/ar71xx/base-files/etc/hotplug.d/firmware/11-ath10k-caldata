@@ -96,10 +96,6 @@ case "$FIRMWARE" in
 		ath10kcal_extract "art" 0x5000 0x844
 		ath10kcal_patch_mac $(mtd_get_mac_binary art 0x12)
 		;;
-	sbr-ac1750)
-		ath10kcal_extract "art" 20480 2116
-		ath10kcal_patch_mac_crc $(macaddr_add $(cat /sys/class/net/eth1/address) +1)
-		;;
 	epg5000|\
 	esr1750)
 		ath10kcal_extract "caldata" 0x5000 0x844
@@ -190,11 +186,6 @@ case "$FIRMWARE" in
 		;;
 	cf-e385ac)
 		ath10kcal_extract "art" 0x5000 0x2f20
-		;;
-	tl-wdr6500-v6)
-		ath10kcal_extract "art" 8192 12064
-		ln -sf /lib/firmware/ath10k/pre-cal-pci-0000\:00\:00.0.bin \
-			/lib/firmware/ath10k/QCA9888/hw2.0/board.bin
 		;;
 	esac
 	;;

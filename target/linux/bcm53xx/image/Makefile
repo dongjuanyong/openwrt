@@ -117,7 +117,7 @@ IEEE8021X := wpad-basic
 B43 := $(IEEE8021X) kmod-b43
 BRCMFMAC_43602A1 := $(IEEE8021X) kmod-brcmfmac brcmfmac-firmware-43602a1-pcie
 BRCMFMAC_4366B1 := $(IEEE8021X) kmod-brcmfmac brcmfmac-firmware-4366b1-pcie
-BRCMFMAC_4366C0 := $(IEEE8021X) kmod-brcmfmac brcmfmac-firmware-4366c0-pcie k3wifi
+BRCMFMAC_4366C0 := $(IEEE8021X) kmod-brcmfmac brcmfmac-firmware-4366c0-pcie
 USB2_PACKAGES := kmod-usb-ohci kmod-usb2 kmod-phy-bcm-ns-usb2
 USB2_PACKAGES += kmod-usb-ledtrig-usbport
 USB3_PACKAGES := $(USB2_PACKAGES) kmod-usb3 kmod-phy-bcm-ns-usb3
@@ -369,22 +369,10 @@ TARGET_DEVICES += smartrg-sr400ac
 define Device/phicomm-k3
   DEVICE_VENDOR := PHICOMM
   DEVICE_MODEL := K3
-  DEVICE_PACKAGES := $(BRCMFMAC_4366C0) $(USB3_PACKAGES) k3screenctrl
+  DEVICE_PACKAGES := $(BRCMFMAC_4366C0) $(USB3_PACKAGES)
   IMAGES := trx
 endef
 TARGET_DEVICES += phicomm-k3
-
-define Device/arris-sbr-ac1900p
-  DEVICE_TITLE := ARRIS SBR-AC1900P
-  DEVICE_PACKAGES := $(USB3_PACKAGES)
-endef
-TARGET_DEVICES += arris-sbr-ac1900p
-
-define Device/arris-sbr-ac3200p
-  DEVICE_TITLE := ARRIS SBR-AC3200P
-  DEVICE_PACKAGES := $(BRCMFMAC_43602A1) $(USB3_PACKAGES)
-endef
-TARGET_DEVICES += arris-sbr-ac3200p
 
 define Device/tenda-ac9
   DEVICE_VENDOR := Tenda

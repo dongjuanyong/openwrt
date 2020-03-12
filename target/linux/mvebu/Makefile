@@ -16,6 +16,6 @@ KERNEL_PATCHVER:=4.19
 
 include $(INCLUDE_DIR)/target.mk
 
-DEFAULT_PACKAGES += uboot-envtools kmod-gpio-button-hotplug automount autosamba v2ray luci-app-advanced-reboot
+DEFAULT_PACKAGES += uboot-envtools kmod-gpio-button-hotplug
 
 $(eval $(call BuildTarget))

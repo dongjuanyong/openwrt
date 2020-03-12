@@ -8,24 +8,9 @@ boot() {
 		[ -n "$(fw_printenv bootcount changed 2>/dev/null)" ] &&\
 			echo -e "bootcount\nchanged\n" | /usr/sbin/fw_setenv -s -
 		;;
-		linksys,ea6350v3)
-			# make sure auto_recovery in uboot is always on
-			IS_AUTO_RECOVERY="$(fw_printenv -n auto_recovery)"
-			if [ "$IS_AUTO_RECOVERY" != "yes" ] ; then
-				fw_setenv auto_recovery yes
-				echo "Linksys EA6350v3: fw_setenv: auto_recovery has been set to yes"
-			fi
-			# reset the boot counter
-			fw_setenv boot_count 0
-			mtd resetbc s_env
-			echo "Linksys EA6350v3: boot counter has been reset"
-			echo "Linksys EA6350v3: boot_part=$(fw_printenv -n boot_part)"
-			;;
+	linksys,ea6350v3|\
 	linksys,ea8300)
 		mtd resetbc s_env || true
 		;;
 	esac
-
-	echo 35 > /sys/devices/system/cpu/cpufreq/ondemand/up_threshold
-  echo 10 > /sys/devices/system/cpu/cpufreq/ondemand/sampling_down_factor
 }

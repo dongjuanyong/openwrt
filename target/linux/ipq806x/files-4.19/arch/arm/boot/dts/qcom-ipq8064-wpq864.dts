@@ -561,4 +561,3 @@
 &tcsr {
 	qcom,usb-ctrl-select = <TCSR_USB_SELECT_USB3_DUAL>;
 };
-
