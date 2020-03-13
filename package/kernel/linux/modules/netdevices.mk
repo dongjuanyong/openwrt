@@ -747,7 +747,7 @@ define KernelPackage/iavf/description
  Kernel modules for Intel(R) Ethernet Controller XL710 Family Virtual Function Ethernet adapters.
 endef
 
-$(eval $(call KernelPackage,i40evf))
+$(eval $(call KernelPackage,iavf))
 
 
 define KernelPackage/b44
