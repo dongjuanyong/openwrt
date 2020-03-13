@@ -288,22 +288,23 @@ menu "Target Images"
 	config VHD_IMAGES
 		bool "Build Hyper-V image files (VHD)"
 		depends on TARGET_x86 || TARGET_x86_64
-		default n
 		depends on GRUB_IMAGES || EFI_IMAGES
 		select TARGET_IMAGES_PAD
 		select PACKAGE_kmod-tulip
+		default n
 
-	config QCOW2_IMAGES
+ 	config QCOW2_IMAGES
 		bool "Build PVE/KVM image files (QCOW2)"
 		depends on TARGET_x86 || TARGET_x86_64
-		default n
 		depends on GRUB_IMAGES || EFI_IMAGES
 		select TARGET_IMAGES_PAD
 		select PACKAGE_kmod-e1000
+		default n
 
 	config TARGET_IMAGES_PAD
 		bool "Pad images to filesystem size (for JFFS2)"
 		depends on GRUB_IMAGES || EFI_IMAGES
+		default y
 
 	config TARGET_IMAGES_GZIP
 		bool "GZip images"
