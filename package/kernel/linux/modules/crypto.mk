@@ -416,6 +416,19 @@ endef
 
 $(eval $(call KernelPackage,crypto-hw-talitos))
 
+define KernelPackage/crypto-iv
+  TITLE:=CryptoAPI initialization vectors
+  DEPENDS:=+kmod-crypto-manager +kmod-crypto-rng +kmod-crypto-wq
+  KCONFIG:= CONFIG_CRYPTO_BLKCIPHER2
+  HIDDEN:=1
+  FILES:= \
+	$(LINUX_DIR)/crypto/eseqiv.ko@lt4.9 \
+	$(LINUX_DIR)/crypto/chainiv.ko@lt4.9
+  AUTOLOAD:=$(call AutoLoad,10,eseqiv chainiv)
+  $(call AddDepends/crypto)
+endef
+
+$(eval $(call KernelPackage,crypto-iv))
 
 define KernelPackage/crypto-kpp
   TITLE:=Key-agreement Protocol Primitives

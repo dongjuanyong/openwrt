@@ -721,9 +721,10 @@ $(eval $(call KernelPackage,i40e))
 define KernelPackage/i40evf
   SUBMENU:=$(NETWORK_DEVICES_MENU)
   TITLE:=Intel(R) Ethernet Adaptive Virtual Function support
-  DEPENDS:=@PCI_SUPPORT +kmod-i40e @!LINUX_5_4
+  DEPENDS:=@PCI_SUPPORT +kmod-i40e
   KCONFIG:=CONFIG_I40EVF
-  FILES:=$(LINUX_DIR)/drivers/net/ethernet/intel/i40evf/i40evf.ko
+  FILES:=$(LINUX_DIR)/drivers/net/ethernet/intel/i40evf/i40evf.ko@lt5.4 \
+	$(LINUX_DIR)/drivers/net/ethernet/intel/iavf/iavf.ko@ge5.4
   AUTOLOAD:=$(call AutoProbe,i40evf)
 endef
 
@@ -732,22 +733,6 @@ define KernelPackage/i40evf/description
 endef
 
 $(eval $(call KernelPackage,i40evf))
-
-
-define KernelPackage/iavf
-  SUBMENU:=$(NETWORK_DEVICES_MENU)
-  TITLE:=Intel(R) Ethernet Adaptive Virtual Function support
-  DEPENDS:=@PCI_SUPPORT +kmod-i40e @LINUX_5_4
-  KCONFIG:=CONFIG_I40EVF
-  FILES:=$(LINUX_DIR)/drivers/net/ethernet/intel/iavf/iavf.ko
-  AUTOLOAD:=$(call AutoProbe,iavf)
-endef
-
-define KernelPackage/iavf/description
- Kernel modules for Intel(R) Ethernet Controller XL710 Family Virtual Function Ethernet adapters.
-endef
-
-$(eval $(call KernelPackage,iavf))
 
 
 define KernelPackage/b44
