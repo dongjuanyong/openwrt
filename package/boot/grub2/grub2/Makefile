@@ -31,7 +31,7 @@ define Host/Install
 		-d $(STAGING_DIR_HOST)/lib/grub/i386-pc \
 		-p /boot/grub \
 		-O i386-pc \
-		-c ./files/grub-early.cfg \
+		-c ../files/grub-early.cfg \
 		-o $(STAGING_DIR_HOST)/lib/grub/grub2-generic/core.img \
 		at_keyboard biosdisk boot chain configfile ext2 linux ls part_msdos reboot serial vga
 
@@ -40,7 +40,7 @@ define Host/Install
 		-d $(STAGING_DIR_HOST)/lib/grub/i386-pc \
 		-p /boot/grub \
 		-O i386-pc \
-		-c ./files/grub-early.cfg \
+		-c ../files/grub-early.cfg \
 		-o $(STAGING_DIR_HOST)/lib/grub/grub2-iso/eltorito.img \
 		at_keyboard biosdisk boot chain configfile iso9660 linux ls part_msdos reboot serial vga
 
@@ -49,7 +49,7 @@ define Host/Install
 		-d $(STAGING_DIR_HOST)/lib/grub/i386-pc \
 		-p /boot/grub \
 		-O i386-pc \
-		-c ./files/grub-early.cfg \
+		-c ../files/grub-early.cfg \
 		-o $(STAGING_DIR_HOST)/lib/grub/grub2-legacy/core.img \
 		biosdisk boot chain configfile ext2 linux ls part_msdos reboot serial vga
 endef
