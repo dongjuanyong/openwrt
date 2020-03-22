@@ -283,18 +283,6 @@ menu "Target Images"
 		select GRUB_IMAGES
 		select PACKAGE_kmod-e1000
 
-	config VHD_IMAGES
-		bool "Build Hyper-V image files (VHD)"
-		depends on TARGET_x86 || TARGET_x86_64
-		depends on GRUB_IMAGES || EFI_IMAGES
-		select PACKAGE_kmod-tulip
-
- 	config QCOW2_IMAGES
-		bool "Build PVE/KVM image files (QCOW2)"
-		depends on TARGET_x86 || TARGET_x86_64
-		depends on GRUB_IMAGES || EFI_IMAGES
-		select PACKAGE_kmod-e1000
-
 	config TARGET_IMAGES_GZIP
 		bool "GZip images"
 		depends on TARGET_ROOTFS_EXT4FS || TARGET_x86 || TARGET_armvirt || TARGET_malta

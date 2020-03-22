@@ -192,17 +192,18 @@ define Device/Default
   IMAGE/combined.vmdk := append-rootfs | pad-extra 128k | grub-config pc | combined | grub-install | qemu-image vmdk
   IMAGE/uefi-gpt.img := append-rootfs | pad-extra 128k | efi
   IMAGE/uefi-gpt.img.gz := append-rootfs | pad-extra 128k | efi | gzip
-  ifeq ($(CONFIG_EFI_IMAGES),y)
-    ifeq ($(CONFIG_TARGET_IMAGES_GZIP),y)
-      IMAGES := uefi-gpt.img.gz
-    else
-      IMAGES := uefi-gpt.img
-    endif
-  else
+  ifeq ($(CONFIG_GRUB_IMAGES),y)
     ifeq ($(CONFIG_TARGET_IMAGES_GZIP),y)
       IMAGES := combined.img.gz
     else
       IMAGES := combined.img
+    endif
+  endif
+  ifeq ($(CONFIG_EFI_IMAGES),y)
+    ifeq ($(CONFIG_TARGET_IMAGES_GZIP),y)
+      IMAGES += uefi-gpt.img.gz
+    else
+      IMAGES += uefi-gpt.img
     endif
   endif
   KERNEL := kernel-bin
