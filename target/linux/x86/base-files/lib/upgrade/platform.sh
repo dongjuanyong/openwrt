@@ -116,7 +116,7 @@ platform_do_upgrade() {
 	echo "Writing new UUID to /dev/$diskdev..."
 	get_image "$@" | dd of="/dev/$diskdev" bs=1 skip=440 count=4 seek=440 conv=fsync
 
-	if [ -f /usr/sbin/grub-bios-setup ]; then
+	if [ ! -f /etc/grub-efi.cfg ]; then
 		platform_do_bootloader_upgrade "$diskdev"
 	fi
 }

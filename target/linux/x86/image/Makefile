@@ -143,6 +143,7 @@ define Build/efi
 		-e 's#@CMDLINE@#$(BOOTOPTS) $(GRUB_CONSOLE_CMDLINE)#g' \
 		-e 's#@TIMEOUT@#$(GRUB_TIMEOUT)#g' \
 		-e 's#@TITLE@#$(GRUB_TITLE)#g' \
+		-e 's#set root.*#search --file /boot/grub/grub.cfg --set=root#g' \
 		./grub-pc.cfg > $@.boot/boot/grub/grub.cfg
 	$(CP) $(KDIR)/$(KERNEL_NAME) $@.boot/boot/vmlinuz
 	-$(CP) $(STAGING_DIR_ROOT)/boot/. $@.boot/boot/

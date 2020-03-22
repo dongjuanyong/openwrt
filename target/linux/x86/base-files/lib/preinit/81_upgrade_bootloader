@@ -5,7 +5,7 @@ upgrade_bootloader() {
 
 	. /lib/upgrade/common.sh
 
-	if [ ! -f /usr/sbin/grub-bios-setup ]; then
+	if [ -f /etc/grub-efi.cfg ]; then
 		touch /boot/grub/upgraded
 	fi
 
