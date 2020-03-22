@@ -34,7 +34,7 @@ define Package/grub2/Default
   SECTION:=boot
   TITLE:=GRand Unified Bootloader
   URL:=http://www.gnu.org/software/grub/
-  DEPENDS:=@TARGET_x86||TARGET_x86_64
+  DEPENDS:=@TARGET_x86
 endef
 
 HOST_BUILD_PREFIX := $(STAGING_DIR_HOST)
