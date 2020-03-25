@@ -138,7 +138,7 @@ export_bootdevice() {
 						} END { print toupper(first"-"second"-"third"-"fourth"-"five) }')
 					if [ "$1" = "$uuid" ]; then
 						uevent="/sys/class/block/${blockdev##*/}/uevent"
-						export SAVE_PARTITIONS=0
+						export UPGRADE_OPT_SAVE_PARTITIONS=0
 						break
 					fi
 				done
