@@ -6,6 +6,7 @@
 include $(TOPDIR)/rules.mk
 
 LUCI_TITLE:=luci-app-advanced
+LUCI_DEPENDS:=+luci-compat
 LUCI_PKGARCH:=all
 PKG_VERSION:=1.0
 PKG_RELEASE:=1
