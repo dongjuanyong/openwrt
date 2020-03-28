@@ -48,7 +48,7 @@ BOOTOPTS:=$(call qstrip,$(CONFIG_GRUB_BOOTOPTS))
 define Build/combined
 	$(CP) $(KDIR)/$(KERNEL_NAME) $@.boot/boot/vmlinuz
 	-$(CP) $(STAGING_DIR_ROOT)/boot/. $@.boot/boot/
-	PADDING="$(CONFIG_TARGET_IMAGES_PAD)" SIGNATURE="$(IMG_PART_SIGNATURE)" $(SCRIPT_DIR)/gen_image_generic.sh \
+	PADDING="1" SIGNATURE="$(IMG_PART_SIGNATURE)" $(SCRIPT_DIR)/gen_image_generic.sh \
 		$@ \
 		$(CONFIG_TARGET_KERNEL_PARTSIZE) $@.boot \
 		$(CONFIG_TARGET_ROOTFS_PARTSIZE) $(IMAGE_ROOTFS) \
@@ -186,24 +186,26 @@ endef
 DEVICE_VARS += GRUB2_VARIANT
 define Device/Default
   ARTIFACT/image.iso := grub-config iso | iso
-  IMAGE/combined.img := append-rootfs | pad-extra 128k | grub-config pc | combined | grub-install
-  IMAGE/combined.img.gz := append-rootfs | pad-extra 128k | grub-config pc | combined | grub-install | gzip
-  IMAGE/combined.vdi := append-rootfs | pad-extra 128k | grub-config pc | combined | grub-install | qemu-image vdi
-  IMAGE/combined.vmdk := append-rootfs | pad-extra 128k | grub-config pc | combined | grub-install | qemu-image vmdk
-  IMAGE/uefi-gpt.img := append-rootfs | pad-extra 128k | efi
-  IMAGE/uefi-gpt.img.gz := append-rootfs | pad-extra 128k | efi | gzip
+  IMAGE/combined.img := grub-config pc | combined | grub-install
+  IMAGE/combined.img.gz := grub-config pc | combined | grub-install | gzip
+  IMAGE/combined.vdi := grub-config pc | combined | grub-install | qemu-image vdi
+  IMAGE/combined.vmdk := grub-config pc | combined | grub-install | qemu-image vmdk
+  IMAGE/rootfs.img := append-rootfs
+  IMAGE/rootfs.img.gz := append-rootfs | gzip
+  IMAGE/uefi-gpt.img := efi
+  IMAGE/uefi-gpt.img.gz := efi | gzip
   ifeq ($(CONFIG_GRUB_IMAGES),y)
     ifeq ($(CONFIG_TARGET_IMAGES_GZIP),y)
-      IMAGES := combined.img.gz
+      IMAGES := combined.img.gz rootfs.img.gz
     else
-      IMAGES := combined.img
+      IMAGES := combined.img rootfs.img
     endif
   endif
   ifeq ($(CONFIG_EFI_IMAGES),y)
     ifeq ($(CONFIG_TARGET_IMAGES_GZIP),y)
-      IMAGES += uefi-gpt.img.gz
+      IMAGES += uefi-gpt.img.gz rootfs.img.gz
     else
-      IMAGES += uefi-gpt.img
+      IMAGES += uefi-gpt.img rootfs.img
     endif
   endif
   KERNEL := kernel-bin
