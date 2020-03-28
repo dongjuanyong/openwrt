@@ -194,18 +194,21 @@ define Device/Default
   IMAGE/rootfs.img.gz := append-rootfs | gzip
   IMAGE/uefi-gpt.img := efi
   IMAGE/uefi-gpt.img.gz := efi | gzip
-  ifeq ($(CONFIG_GRUB_IMAGES),y)
-    ifeq ($(CONFIG_TARGET_IMAGES_GZIP),y)
-      IMAGES := combined.img.gz rootfs.img.gz
-    else
-      IMAGES := combined.img rootfs.img
+  ifeq ($(CONFIG_TARGET_IMAGES_GZIP),y)
+    IMAGES := rootfs.img.gz
+    ifeq ($(CONFIG_GRUB_IMAGES),y)
+      IMAGES += combined.img.gz
     endif
-  endif
-  ifeq ($(CONFIG_EFI_IMAGES),y)
-    ifeq ($(CONFIG_TARGET_IMAGES_GZIP),y)
-      IMAGES += uefi-gpt.img.gz rootfs.img.gz
-    else
-      IMAGES += uefi-gpt.img rootfs.img
+    ifeq ($(CONFIG_EFI_IMAGES),y)
+      IMAGES += uefi-gpt.img.gz
+    endif
+  else
+    IMAGES := rootfs.img
+    ifeq ($(CONFIG_GRUB_IMAGES),y)
+      IMAGES += combined.img
+    endif
+    ifeq ($(CONFIG_EFI_IMAGES),y)
+      IMAGES += uefi-gpt.img
     endif
   endif
   KERNEL := kernel-bin
