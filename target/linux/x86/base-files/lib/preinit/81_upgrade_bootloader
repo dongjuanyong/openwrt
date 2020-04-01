@@ -5,10 +5,6 @@ upgrade_bootloader() {
 
 	. /lib/upgrade/common.sh
 
-	if [ -f /etc/grub-efi.cfg ]; then
-		touch /boot/grub/upgraded
-	fi
-
 	if [ ! -f /boot/grub/upgraded ] && export_bootdevice && export_partdevice diskdev 0; then
 		echo "(hd0) /dev/$diskdev" > /tmp/device.map
 		/usr/sbin/grub-bios-setup \

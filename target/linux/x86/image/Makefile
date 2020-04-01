@@ -38,7 +38,6 @@ endif
 
 ROOTPART:=$(call qstrip,$(CONFIG_TARGET_ROOTFS_PARTNAME))
 ROOTPART:=$(if $(ROOTPART),$(ROOTPART),PARTUUID=$(IMG_PART_SIGNATURE)-02)
-EFI_SIGNATURE:=$(strip $(shell uuidgen | sed "s/[a-zA-Z0-9][a-zA-Z0-9][a-zA-Z0-9][a-zA-Z0-9]$$/0002/" | tr '[a-z]' '[A-Z]'))
 
 GRUB_TIMEOUT:=$(call qstrip,$(CONFIG_GRUB_TIMEOUT))
 GRUB_TITLE:=$(call qstrip,$(CONFIG_GRUB_TITLE))
@@ -93,96 +92,6 @@ define Build/iso
 		-o $@ $@.boot $(TARGET_DIR)
 endef
 
-ifneq ($(CONFIG_EFI_SIGNED_BINARY),)
-
-  define Build/Sign
-  	cd $(TOPDIR) && \
-  	echo "Checking certificate information" && \
-  	openssl x509 -in $(CONFIG_EFI_SIGNING_PUBLIC_KEY) -text -noout && \
-  	echo "Signing kernel" && \
-  	sbsign --cert $(CONFIG_EFI_SIGNING_PUBLIC_KEY) \
-  		--key $(CONFIG_EFI_SIGNING_PRIVATE_KEY) \
-  		$@.boot/boot/vmlinuz && \
-  	rm -f $@.boot/boot/vmlinuz && \
-  	mv $@.boot/boot/vmlinuz.signed $@.boot/boot/vmlinuz && \
-  	echo "Verifying kernel signature" && \
-  	sbverify --list \
-  		$@.boot/boot/vmlinuz && \
-  	sbverify --cert $(CONFIG_EFI_SIGNING_PUBLIC_KEY) \
-  		$@.boot/boot/vmlinuz && \
-  	echo "Signing bootloader" && \
-  	sbsign --cert $(CONFIG_EFI_SIGNING_PUBLIC_KEY) \
-  		--key $(CONFIG_EFI_SIGNING_PRIVATE_KEY) \
-  		$(KDIR)/grub2.efi/efi/boot/bootx64.efi && \
-  	rm -f $(KDIR)/grub2.efi/efi/boot/bootx64.efi && \
-  	mv $(KDIR)/grub2.efi/efi/boot/bootx64.efi.signed $(KDIR)/grub2.efi/efi/boot/bootx64.efi && \
-  	echo "Verifying bootloader signature" && \
-  	sbverify --list \
-  		$(KDIR)/grub2.efi/efi/boot/bootx64.efi && \
-  	sbverify --cert $(CONFIG_EFI_SIGNING_PUBLIC_KEY) \
-  		$(KDIR)/grub2.efi/efi/boot/bootx64.efi && \
-  	echo "Signing kernel and bootloader complete" && \
-  	cd -
-  endef
-
-else
-
-  define Build/Sign
-  	echo "Not signing efi binaries"
-  endef
-
-endif
-
-define Build/efi
-	rm -fR $@.boot
-	$(INSTALL_DIR) $@.boot/boot/grub
-	sed \
-		-e 's#@SERIAL_CONFIG@#$(strip $(GRUB_SERIAL_CONFIG))#g' \
-		-e 's#@TERMINAL_CONFIG@#$(strip $(GRUB_TERMINAL_CONFIG))#g' \
-		-e 's#@ROOTPART@#root=PARTUUID=$(EFI_SIGNATURE) rootwait#g' \
-		-e 's#@CMDLINE@#$(BOOTOPTS) $(GRUB_CONSOLE_CMDLINE)#g' \
-		-e 's#@TIMEOUT@#$(GRUB_TIMEOUT)#g' \
-		-e 's#@TITLE@#$(GRUB_TITLE)#g' \
-		-e 's#set root.*#search --file /boot/grub/grub.cfg --set=root#g' \
-		./grub-pc.cfg > $@.boot/boot/grub/grub.cfg
-	$(CP) $(KDIR)/$(KERNEL_NAME) $@.boot/boot/vmlinuz
-	-$(CP) $(STAGING_DIR_ROOT)/boot/. $@.boot/boot/
-
-	rm -rf $(KDIR)/grub2.efi/ || true
-	$(INSTALL_DIR) $(KDIR)/grub2.efi/efi/boot/
-	$(CP) $(STAGING_DIR_HOST)/lib/grub/grub2-efi/bootx64.efi \
-		$(KDIR)/grub2.efi/efi/boot/
-	$(call Build/Sign)
-	rm $(KDIR)/kernel.efi || true
-	mkfs.fat -C $(KDIR)/kernel.efi -S 512 1024
-	mcopy -s -i "$(KDIR)/kernel.efi" $(KDIR)/grub2.efi/* ::/
-	SIGNATURE="$(IMG_PART_SIGNATURE)" PATH="$(TARGET_PATH)" ./gen_image_efi.sh \
-		$@ \
-		$(CONFIG_TARGET_KERNEL_PARTSIZE) $@.boot \
-		1 $(KDIR)/kernel.efi \
-		1 \
-		$(CONFIG_TARGET_ROOTFS_PARTSIZE) $(IMAGE_ROOTFS) \
-		1024
-	dd if=/dev/zero of=$@ bs=512 count=34 conv=notrunc oflag=append
-	sgdisk -g $@
-	sgdisk -t 2:EF00 $@
-	sgdisk -t 3:EF02 $@
-	sgdisk -u 4:$(EFI_SIGNATURE) $@
-	sgdisk -h $@
-
-	rm -fR $@.grub2
-	$(INSTALL_DIR) $@.grub2
-	$(CP) $(STAGING_DIR_HOST)/lib/grub/i386-pc/*.img \
-		$(STAGING_DIR_HOST)/lib/grub/grub2-bios/core.img \
-		$@.grub2/
-	echo '(hd0) $@' > $@.grub2/device.map
-	$(STAGING_DIR_HOST)/bin/grub-bios-setup-efi \
-		-m "$@.grub2/device.map" \
-		-d "$@.grub2" \
-		-r "hd0,gpt1" \
-		$@
-endef
-
 DEVICE_VARS += GRUB2_VARIANT
 define Device/Default
   ARTIFACT/image.iso := grub-config iso | iso
@@ -192,24 +101,10 @@ define Device/Default
   IMAGE/combined.vmdk := grub-config pc | combined | grub-install | qemu-image vmdk
   IMAGE/rootfs.img := append-rootfs
   IMAGE/rootfs.img.gz := append-rootfs | gzip
-  IMAGE/uefi-gpt.img := efi
-  IMAGE/uefi-gpt.img.gz := efi | gzip
   ifeq ($(CONFIG_TARGET_IMAGES_GZIP),y)
-    IMAGES := rootfs.img.gz
-    ifeq ($(CONFIG_GRUB_IMAGES),y)
-      IMAGES += combined.img.gz
-    endif
-    ifeq ($(CONFIG_EFI_IMAGES),y)
-      IMAGES += uefi-gpt.img.gz
-    endif
+    IMAGES := combined.img.gz rootfs.img.gz
   else
-    IMAGES := rootfs.img
-    ifeq ($(CONFIG_GRUB_IMAGES),y)
-      IMAGES += combined.img
-    endif
-    ifeq ($(CONFIG_EFI_IMAGES),y)
-      IMAGES += uefi-gpt.img
-    endif
+    IMAGES := combined.img rootfs.img
   endif
   KERNEL := kernel-bin
   KERNEL_INSTALL := 1
@@ -244,3 +139,4 @@ ifeq ($(SUBTARGET),legacy)
 endif
 
 $(eval $(call BuildImage))
+
