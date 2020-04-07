@@ -13,7 +13,7 @@ diff --git a/src/dnsmasq.h b/src/dnsmasq.h
 index 1896a64..e10d6c4 100644
 --- a/src/dnsmasq.h
 +++ b/src/dnsmasq.h
-@@ -268,7 +268,8 @@
+@@ -269,7 +269,8 @@
  #define OPT_IGNORE_CLID    59
  #define OPT_SINGLE_PORT    60
  #define OPT_LEASE_RENEW    61
@@ -53,7 +53,7 @@ diff --git a/src/rfc1035.c b/src/rfc1035.c
 index 24d08c1..1594962 100644
 --- a/src/rfc1035.c
 +++ b/src/rfc1035.c
-@@ -1941,6 +1941,15 @@
+@@ -1955,6 +1955,15 @@
  	    }
  	}
  

@@ -58,7 +58,7 @@
 -LIBS =
 +LIBS = -lpthread
  
- # Uncomment the next line to include support for Microsoft's
+ # Uncomment the next 2 lines to include support for Microsoft's
  # MS-CHAP authentication protocol.  Also, edit plugins/radius/Makefile.linux.
 --- a/pppd/options.c
 +++ b/pppd/options.c
