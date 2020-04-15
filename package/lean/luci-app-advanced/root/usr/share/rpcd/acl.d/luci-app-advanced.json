@@ -109,16 +109,6 @@
 		}
 	},
 
-	"luci-app-ssr-plus": {
-		"description": "Grant UCI access for luci-app-ssr-plus",
-		"read": {
-			"uci": [ "shadowsocksr" ]
-		},
-		"write": {
-			"uci": [ "shadowsocksr" ]
-		}
-	},
-
 	"luci-app-udp2raw": {
 		"description": "Grant UCI access for luci-app-udp2raw",
 		"read": {
