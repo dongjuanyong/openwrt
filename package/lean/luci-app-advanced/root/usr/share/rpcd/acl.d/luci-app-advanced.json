@@ -39,16 +39,6 @@
 		}
 	},
 
-	"luci-app-arpbind": {
-		"description": "Grant UCI access for luci-app-arpbind",
-		"read": {
-			"uci": [ "arpbind" ]
-		},
-		"write": {
-			"uci": [ "arpbind" ]
-		}
-	},
-
 	"luci-app-autoreboot": {
 		"description": "Grant UCI access for luci-app-autoreboot",
 		"read": {
@@ -176,16 +166,6 @@
 		},
 		"write": {
 			"uci": [ "xlnetacc" ]
-		}
-	},
-
-	"luci-app-zerotier": {
-		"description": "Grant UCI access for luci-app-zerotier",
-		"read": {
-			"uci": [ "zerotier" ]
-		},
-		"write": {
-			"uci": [ "zerotier" ]
 		}
 	}
 }
