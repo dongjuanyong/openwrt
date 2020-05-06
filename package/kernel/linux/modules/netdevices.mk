@@ -1220,6 +1220,21 @@ endef
 
 $(eval $(call KernelPackage,sfp))
 
+define KernelPackage/jme
+  SUBMENU:=$(NETWORK_DEVICES_MENU)
+  TITLE:=JMicron(R) PCI-Express Gigabit Ethernet support
+  DEPENDS:=@PCI_SUPPORT +kmod-mii
+  KCONFIG:=CONFIG_JME
+  FILES:=$(LINUX_DIR)/drivers/net/ethernet/jme.ko
+  AUTOLOAD:=$(call AutoProbe,jme)
+endef
+
+define KernelPackage/jme/description
+ Kernel modules for JMicron(R) PCI-Express Gigabit Ethernet adapters
+endef
+
+$(eval $(call KernelPackage,jme))
+
 define KernelPackage/sfc
   SUBMENU:=$(NETWORK_DEVICES_MENU)
   TITLE:=Solarflare SFC9000/SFC9100-family 10Gbps NIC support
