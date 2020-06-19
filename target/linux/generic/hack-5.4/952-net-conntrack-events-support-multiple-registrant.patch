@@ -102,7 +102,7 @@ diff -uNr a/net/netfilter/Kconfig b/net/netfilter/Kconfig
 diff -uNr a/net/netfilter/nf_conntrack_core.c b/net/netfilter/nf_conntrack_core.c
 --- a/net/netfilter/nf_conntrack_core.c	2020-03-21 08:29:26.502510600 +0800
 +++ b/net/netfilter/nf_conntrack_core.c	2020-03-21 08:29:57.657070600 +0800
-@@ -2523,6 +2523,10 @@
+@@ -2589,6 +2589,10 @@
  	nf_conntrack_helper_pernet_init(net);
  	nf_conntrack_proto_pernet_init(net);
  
