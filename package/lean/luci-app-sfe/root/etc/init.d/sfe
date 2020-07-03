@@ -6,6 +6,7 @@ START=90
 USE_PROCD=1
 
 PDNSD_BIN="/var/sbin/dnscache"
+DNSMASQ_MODIFIED=N
 DNSMASQ_RESTART=N
 DNS_SERVER="114.114.114.114,114.114.115.115"
 
@@ -133,16 +134,22 @@ EOF
 change_dns() {
  	uci delete dhcp.@dnsmasq[0].server >/dev/null 2>&1
 	uci add_list dhcp.@dnsmasq[0].server=127.0.0.1#5333
-	uci set dhcp.@dnsmasq[0].resolvfile=/tmp/resolv.conf.auto
+  uci set dhcp.@dnsmasq[0].resolvfile=/tmp/resolv.conf.d/resolv.conf.auto
 	uci set dhcp.@dnsmasq[0].noresolv=0
-	uci commit dhcp
+  if [ -n "$(uci changes dhcp 2>/dev/null)" ]; then
+    uci commit dhcp
+    DNSMASQ_MODIFIED=Y
+  fi
 }
 
 revert_dns() {
 	uci del_list dhcp.@dnsmasq[0].server=127.0.0.1#5333 >/dev/null 2>&1
-	uci set dhcp.@dnsmasq[0].resolvfile=/tmp/resolv.conf.auto
+  uci set dhcp.@dnsmasq[0].resolvfile=/tmp/resolv.conf.d/resolv.conf.auto
 	uci set dhcp.@dnsmasq[0].noresolv=0
-	uci commit dhcp
+  if [ -n "$(uci changes dhcp 2>/dev/null)" ]; then
+    uci commit dhcp
+    DNSMASQ_MODIFIED=Y
+  fi
 }
 
 start_service() {
@@ -185,7 +192,9 @@ start_service() {
     sysctl -w net.ipv4.tcp_congestion_control=cubic
   fi
   if [ "$DNSMASQ_RESTART" = N ]; then
-    /etc/init.d/dnsmasq restart
+    if [ "$DNSMASQ_MODIFIED" = Y ]; then
+      /etc/init.d/dnsmasq restart && echo "DNSMASQ change"
+    fi
   fi
 }
 
@@ -194,7 +203,9 @@ stop_service(){
     [ $enable -ne 1 ] && rmmod fast_classifier >/dev/null 2>&1 
     revert_dns
 	  if [ "$DNSMASQ_RESTART" = N ]; then
-      /etc/init.d/dnsmasq restart
+      if [ "$DNSMASQ_MODIFIED" = Y ]; then
+        /etc/init.d/dnsmasq restart && echo "DNSMASQ revert"
+      fi
     fi
 }
 
@@ -202,5 +213,7 @@ restart(){
     DNSMASQ_RESTART=Y
 	  stop
 	  start
-	  /etc/init.d/dnsmasq restart && echo "DNSMASQ restart"
+    if [ "$DNSMASQ_MODIFIED" = Y ]; then
+      /etc/init.d/dnsmasq restart && echo "DNSMASQ restart"
+    fi
 }
