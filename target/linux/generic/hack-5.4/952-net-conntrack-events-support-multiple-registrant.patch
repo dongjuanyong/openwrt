@@ -1,7 +1,8 @@
-diff -uNr a/include/net/netfilter/nf_conntrack_ecache.h b/include/net/netfilter/nf_conntrack_ecache.h
---- a/include/net/netfilter/nf_conntrack_ecache.h	2020-03-21 08:29:13.205739100 +0800
-+++ b/include/net/netfilter/nf_conntrack_ecache.h	2020-03-21 08:29:57.620036800 +0800
-@@ -72,6 +72,10 @@
+diff --git a/include/net/netfilter/nf_conntrack_ecache.h b/include/net/netfilter/nf_conntrack_ecache.h
+index 12d967b..c2b98b6 100644
+--- a/include/net/netfilter/nf_conntrack_ecache.h
++++ b/include/net/netfilter/nf_conntrack_ecache.h
+@@ -71,6 +71,10 @@ struct nf_ct_event {
  	int report;
  };
  
@@ -12,7 +13,7 @@ diff -uNr a/include/net/netfilter/nf_conntrack_ecache.h b/include/net/netfilter/
  struct nf_ct_event_notifier {
  	int (*fcn)(unsigned int events, struct nf_ct_event *item);
  };
-@@ -80,7 +84,7 @@
+@@ -79,7 +83,7 @@ int nf_conntrack_register_notifier(struc
  				   struct nf_ct_event_notifier *nb);
  void nf_conntrack_unregister_notifier(struct net *net,
  				      struct nf_ct_event_notifier *nb);
@@ -21,7 +22,7 @@ diff -uNr a/include/net/netfilter/nf_conntrack_ecache.h b/include/net/netfilter/
  void nf_ct_deliver_cached_events(struct nf_conn *ct);
  int nf_conntrack_eventmask_report(unsigned int eventmask, struct nf_conn *ct,
  				  u32 portid, int report);
-@@ -105,12 +109,15 @@
+@@ -87,12 +91,15 @@ int nf_conntrack_eventmask_report(unsign
  nf_conntrack_event_cache(enum ip_conntrack_events event, struct nf_conn *ct)
  {
  #ifdef CONFIG_NF_CONNTRACK_EVENTS
@@ -38,7 +39,7 @@ diff -uNr a/include/net/netfilter/nf_conntrack_ecache.h b/include/net/netfilter/
  	e = nf_ct_ecache_find(ct);
  	if (e == NULL)
  		return;
-@@ -124,10 +131,12 @@
+@@ -104,10 +111,12 @@ static inline int
  			  u32 portid, int report)
  {
  #ifdef CONFIG_NF_CONNTRACK_EVENTS
@@ -50,8 +51,8 @@ diff -uNr a/include/net/netfilter/nf_conntrack_ecache.h b/include/net/netfilter/
 +#endif
  
  	return nf_conntrack_eventmask_report(1 << event, ct, portid, report);
- #else
-@@ -139,11 +148,14 @@
+ }
+@@ -115,11 +124,14 @@ nf_conntrack_event_report(enum ip_conntr
  nf_conntrack_event(enum ip_conntrack_events event, struct nf_conn *ct)
  {
  #ifdef CONFIG_NF_CONNTRACK_EVENTS
@@ -64,12 +65,13 @@ diff -uNr a/include/net/netfilter/nf_conntrack_ecache.h b/include/net/netfilter/
 +#endif
 +
  	return nf_conntrack_eventmask_report(1 << event, ct, 0, 0);
- #else
- 	return 0;
-diff -uNr a/include/net/netns/conntrack.h b/include/net/netns/conntrack.h
---- a/include/net/netns/conntrack.h	2020-03-21 08:29:13.243773500 +0800
-+++ b/include/net/netns/conntrack.h	2020-03-21 08:29:57.622039000 +0800
-@@ -112,7 +112,11 @@
+ }
+ 
+diff --git a/include/net/netns/conntrack.h b/include/net/netns/conntrack.h
+index e469e85..1d31db8 100644
+--- a/include/net/netns/conntrack.h
++++ b/include/net/netns/conntrack.h
+@@ -114,7 +114,11 @@ struct netns_ct {
  
  	struct ct_pcpu __percpu *pcpu_lists;
  	struct ip_conntrack_stat __percpu *stat;
@@ -81,12 +83,13 @@ diff -uNr a/include/net/netns/conntrack.h b/include/net/netns/conntrack.h
  	struct nf_exp_event_notifier __rcu *nf_expect_event_cb;
  	struct nf_ip_net	nf_ct_proto;
  #if defined(CONFIG_NF_CONNTRACK_LABELS)
-diff -uNr a/net/netfilter/Kconfig b/net/netfilter/Kconfig
---- a/net/netfilter/Kconfig	2020-03-21 08:29:26.389408100 +0800
-+++ b/net/netfilter/Kconfig	2020-03-21 08:29:57.624041200 +0800
-@@ -148,6 +148,14 @@
- 	  To compile it as a module, choose M here.  If unsure, say N.
- 	  The module will be called nf_conntrack_rtcache.
+diff --git a/net/netfilter/Kconfig b/net/netfilter/Kconfig
+index 63073be..08d7aab 100644
+--- a/net/netfilter/Kconfig
++++ b/net/netfilter/Kconfig
+@@ -118,6 +118,14 @@ config NF_CONNTRACK_EVENTS
+ 
+ 	  If unsure, say `N'.
  
 +config NF_CONNTRACK_CHAIN_EVENTS
 +	bool "Register multiple callbacks to ct events"
@@ -99,24 +102,28 @@ diff -uNr a/net/netfilter/Kconfig b/net/netfilter/Kconfig
  config NF_CONNTRACK_TIMEOUT
  	bool  'Connection tracking timeout'
  	depends on NETFILTER_ADVANCED
-diff -uNr a/net/netfilter/nf_conntrack_core.c b/net/netfilter/nf_conntrack_core.c
---- a/net/netfilter/nf_conntrack_core.c	2020-03-21 08:29:26.502510600 +0800
-+++ b/net/netfilter/nf_conntrack_core.c	2020-03-21 08:29:57.657070600 +0800
-@@ -2589,6 +2589,10 @@
+diff --git a/net/netfilter/nf_conntrack_core.c b/net/netfilter/nf_conntrack_core.c
+index 6bd1508..9b81c7c 100644
+--- a/net/netfilter/nf_conntrack_core.c
++++ b/net/netfilter/nf_conntrack_core.c
+@@ -2522,7 +2522,10 @@
+ 	nf_conntrack_ecache_pernet_init(net);
  	nf_conntrack_helper_pernet_init(net);
  	nf_conntrack_proto_pernet_init(net);
- 
+-
++	
 +#ifdef CONFIG_NF_CONNTRACK_CHAIN_EVENTS
 +	ATOMIC_INIT_NOTIFIER_HEAD(&net->ct.nf_conntrack_chain);
 +#endif
-+
  	return 0;
  
  err_expect:
-diff -uNr a/net/netfilter/nf_conntrack_ecache.c b/net/netfilter/nf_conntrack_ecache.c
---- a/net/netfilter/nf_conntrack_ecache.c	2020-03-21 08:29:26.402419700 +0800
-+++ b/net/netfilter/nf_conntrack_ecache.c	2020-03-21 08:29:57.658071400 +0800
-@@ -17,6 +17,9 @@
+
+diff --git a/net/netfilter/nf_conntrack_ecache.c b/net/netfilter/nf_conntrack_ecache.c
+index da9df2d..e0e2a8f 100644
+--- a/net/netfilter/nf_conntrack_ecache.c
++++ b/net/netfilter/nf_conntrack_ecache.c
+@@ -18,6 +18,9 @@
  #include <linux/stddef.h>
  #include <linux/err.h>
  #include <linux/percpu.h>
@@ -126,7 +133,7 @@ diff -uNr a/net/netfilter/nf_conntrack_ecache.c b/net/netfilter/nf_conntrack_eca
  #include <linux/kernel.h>
  #include <linux/netdevice.h>
  #include <linux/slab.h>
-@@ -117,6 +120,38 @@
+@@ -117,6 +120,38 @@ static void ecache_work(struct work_stru
  		schedule_delayed_work(&ctnet->ecache_dwork, delay);
  }
  
@@ -165,7 +172,7 @@ diff -uNr a/net/netfilter/nf_conntrack_ecache.c b/net/netfilter/nf_conntrack_eca
  int nf_conntrack_eventmask_report(unsigned int eventmask, struct nf_conn *ct,
  				  u32 portid, int report)
  {
-@@ -171,10 +206,52 @@
+@@ -171,10 +206,52 @@ out_unlock:
  	rcu_read_unlock();
  	return ret;
  }
@@ -218,7 +225,7 @@ diff -uNr a/net/netfilter/nf_conntrack_ecache.c b/net/netfilter/nf_conntrack_eca
  void nf_ct_deliver_cached_events(struct nf_conn *ct)
  {
  	struct net *net = nf_ct_net(ct);
-@@ -225,6 +302,7 @@
+@@ -225,6 +302,7 @@ void nf_ct_deliver_cached_events(struct
  out_unlock:
  	rcu_read_unlock();
  }
@@ -226,7 +233,7 @@ diff -uNr a/net/netfilter/nf_conntrack_ecache.c b/net/netfilter/nf_conntrack_eca
  EXPORT_SYMBOL_GPL(nf_ct_deliver_cached_events);
  
  void nf_ct_expect_event_report(enum ip_conntrack_expect_events event,
-@@ -257,6 +335,12 @@
+@@ -257,6 +335,12 @@ out_unlock:
  	rcu_read_unlock();
  }
  
@@ -239,7 +246,7 @@ diff -uNr a/net/netfilter/nf_conntrack_ecache.c b/net/netfilter/nf_conntrack_eca
  int nf_conntrack_register_notifier(struct net *net,
  				   struct nf_ct_event_notifier *new)
  {
-@@ -277,8 +361,15 @@
+@@ -277,8 +361,15 @@ out_unlock:
  	mutex_unlock(&nf_ct_ecache_mutex);
  	return ret;
  }
@@ -255,7 +262,7 @@ diff -uNr a/net/netfilter/nf_conntrack_ecache.c b/net/netfilter/nf_conntrack_eca
  void nf_conntrack_unregister_notifier(struct net *net,
  				      struct nf_ct_event_notifier *new)
  {
-@@ -292,6 +383,7 @@
+@@ -292,6 +383,7 @@ void nf_conntrack_unregister_notifier(st
  	mutex_unlock(&nf_ct_ecache_mutex);
  	/* synchronize_rcu() is called from ctnetlink_exit. */
  }
@@ -263,9 +270,10 @@ diff -uNr a/net/netfilter/nf_conntrack_ecache.c b/net/netfilter/nf_conntrack_eca
  EXPORT_SYMBOL_GPL(nf_conntrack_unregister_notifier);
  
  int nf_ct_expect_register_notifier(struct net *net,
-diff -uNr a/net/netfilter/nf_conntrack_netlink.c b/net/netfilter/nf_conntrack_netlink.c
---- a/net/netfilter/nf_conntrack_netlink.c	2020-03-21 08:29:26.622619900 +0800
-+++ b/net/netfilter/nf_conntrack_netlink.c	2020-03-21 08:29:57.660073300 +0800
+diff --git a/net/netfilter/nf_conntrack_netlink.c b/net/netfilter/nf_conntrack_netlink.c
+index 04111c1..8c741f7 100644
+--- a/net/netfilter/nf_conntrack_netlink.c
++++ b/net/netfilter/nf_conntrack_netlink.c
 @@ -28,6 +28,11 @@
  #include <linux/netlink.h>
  #include <linux/spinlock.h>
@@ -276,9 +284,9 @@ diff -uNr a/net/netfilter/nf_conntrack_netlink.c b/net/netfilter/nf_conntrack_ne
 +#endif
 +
  #include <linux/slab.h>
- #include <linux/siphash.h>
  
-@@ -676,14 +681,22 @@
+ #include <linux/netfilter.h>
+@@ -618,14 +623,22 @@ static size_t ctnetlink_nlmsg_size(const
  	       ;
  }
  
@@ -301,7 +309,7 @@ diff -uNr a/net/netfilter/nf_conntrack_netlink.c b/net/netfilter/nf_conntrack_ne
  	struct nf_conn *ct = item->ct;
  	struct sk_buff *skb;
  	unsigned int type;
-@@ -3502,9 +3515,15 @@
+@@ -3290,9 +3303,15 @@ static int ctnetlink_stat_exp_cpu(struct
  }
  
  #ifdef CONFIG_NF_CONNTRACK_EVENTS
