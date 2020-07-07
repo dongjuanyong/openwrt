@@ -49,6 +49,16 @@
 		}
 	},
 
+	"luci-app-webadmin": {
+		"description": "Grant UCI access for luci-app-webadmin",
+		"read": {
+			"uci": [ "uhttpd" ]
+		},
+		"write": {
+			"uci": [ "uhttpd" ]
+		}
+	},
+
 	"luci-app-dnscrypt-proxy2": {
 		"description": "Grant UCI access for luci-app-dnscrypt-proxy2",
 		"read": {
@@ -56,6 +66,16 @@
 		},
 		"write": {
 			"uci": [ "dnscrypt-proxy2" ]
+		}
+	},
+
+	"luci-app-sfe": {
+		"description": "Grant UCI access for luci-app-sfe",
+		"read": {
+			"uci": [ "sfe" ]
+		},
+		"write": {
+			"uci": [ "sfe" ]
 		}
 	},
 
@@ -76,6 +96,16 @@
 		},
 		"write": {
 			"uci": [ "forked-daapd" ]
+		}
+	},
+
+	"luci-app-ipsec-vpnd": {
+		"description": "Grant UCI access for luci-app-ipsec-vpnd",
+		"read": {
+			"uci": [ "ipsec" ]
+		},
+		"write": {
+			"uci": [ "ipsec" ]
 		}
 	},
 
