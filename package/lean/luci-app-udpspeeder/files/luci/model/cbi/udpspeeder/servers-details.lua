@@ -62,6 +62,10 @@ o = s:option(Value, "random_drop", translate("Random Drop Packets"), translate("
 
 o = s:option(Flag, "disable_obscure", translate("Disable Obscure"), translate("Save a bit bandwidth and cpu"))
 
+o = s:option(Value, "out_addr", translate("Bind to address"))
+
+o = s:option(Value, "out_interface", translate("Bind to interface"))
+
 o = s:option(Value, "log_level", translate("Log Level"))
 o.datatype = "range(0,6)"
 o.placeholder = "4"

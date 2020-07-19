@@ -69,6 +69,9 @@ create_config() {
 	[ -n "$source_port" ] && echo "--source-port ${source_port}" >> $config_file
 	echo "--retry-on-error" >> $config_file
 
+	[ -n "$dev" ] && echo "--dev ${dev}" >> $config_file
+	[ $fix_gro -eq 1] && echo "--fix-gro" >> $config_file
+
 	[ -n "$log_level" ] && echo "--log-level ${log_level}" >> $config_file
 	echo "--disable-color" >> $config_file
 }
@@ -87,14 +90,16 @@ validate_server_section() {
 		'listen_port:port:2080' \
 		'raw_mode:or("faketcp", "udp", "icmp"):faketcp' \
 		'key:string' \
-		'cipher_mode:or("aes128cbc", "xor", "none"):aes128cbc' \
-		'auth_mode:or("md5", "crc32", "simple", "none"):md5' \
+		'cipher_mode:or("aes128cfb", "aes128cbc", "xor", "none"):aes128cbc' \
+		'auth_mode:or("hmac_sha1", "md5", "crc32", "simple", "none"):md5' \
 		'auto_rule:bool:1' \
 		'keep_rule:bool:0' \
 		'seq_mode:range(0,4)' \
 		'lower_level:string' \
 		'source_ip:ipaddr' \
 		'source_port:port' \
+		'dev:string' \
+		'fix_gro:bool:0' \
 		'log_level:range(0,6)'
 }
 

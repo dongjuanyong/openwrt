@@ -41,7 +41,9 @@ validate_server_section() {
 		'jitter:uinteger' \
 		'interval:uinteger' \
 		'random_drop:range(0,10000)' \
-		'disable_obscure:bool' \
+		'disable_obscure:bool:0' \
+		'out_addr:ipaddr' \
+		'out_interface:string' \
 		'log_level:range(0,6)' \
 		2> /dev/null)
 	[ $? -ne 0 ] && return 1
@@ -78,7 +80,9 @@ start_instance() {
 	[ -n "$jitter" ] && cmdline="${cmdline} -j ${jitter}"
 	[ -n "$interval" ] && cmdline="${cmdline} -i ${interval}"
 	[ -n "$random_drop" ] && cmdline="${cmdline} --random-drop ${random_drop}"
-	[ "$disable_obscure" -eq "1" ] && cmdline="${cmdline} --disable-obscure"
+	[ $disable_obscure -eq 1 ] && cmdline="${cmdline} --disable-obscure"
+	[ -n "$out_addr" ] && cmdline="${cmdline} --out-addr ${out_addr}"
+	[ -n "$out_interface" ] && cmdline="${cmdline} --out-interface ${out_interface}"
 	[ -n "$log_level" ] && cmdline="${cmdline} --log-level ${log_level}"
 
 	$(eval echo $cmdline) >> "/var/log/${NAME}/${NAME}.${server}.log" &

@@ -39,7 +39,9 @@ validate_server_section() {
 		'jitter:uinteger' \
 		'interval:uinteger' \
 		'random_drop:range(0,10000)' \
-		'disable_obscure:bool' \
+		'disable_obscure:bool:0' \
+		'out_addr:ipaddr' \
+		'out_interface:string' \
 		'log_level:range(0,6)'
 }
 
@@ -75,7 +77,9 @@ start_instance() {
 	[ -n "$jitter" ] && procd_append_param command -j ${jitter}
 	[ -n "$interval" ] && procd_append_param command -i ${interval}
 	[ -n "$random_drop" ] && procd_append_param command --random-drop ${random_drop}
-	[ "$disable_obscure" -eq "1" ] && procd_append_param command --disable-obscure
+	[ $disable_obscure -eq 1 ] && procd_append_param command --disable-obscure
+	[ -n "$out_addr" ] && procd_append_param command --out-addr ${out_addr}
+	[ -n "$out_interface" ] && procd_append_param command --out-interface ${out_interface}
 	[ -n "$log_level" ] && procd_append_param command --log-level ${log_level}
 	procd_set_param respawn
 	[ -n "$daemon_user" ] && procd_set_param user "$daemon_user" && _log "info" "running from ${daemon_user} user"

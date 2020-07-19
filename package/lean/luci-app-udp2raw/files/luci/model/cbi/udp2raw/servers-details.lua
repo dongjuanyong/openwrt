@@ -8,12 +8,14 @@ local raw_modes = {
 }
 
 local cipher_modes = {
+	"aes128cfb",
 	"aes128cbc",
 	"xor",
 	"none",
 }
 
 local auth_modes = {
+	"hmac_sha1",
 	"md5",
 	"crc32",
 	"simple",
@@ -84,6 +86,10 @@ o.datatype = "ipaddr"
 
 o = s:option(Value, "source_port", translate("Source-Port"), translate("Force source-port for Raw Socket, TCP/UDP only."))
 o.datatype = "port"
+
+o = s:option(Value, "dev", translate("Bind device"), translate("Allow you to bind raw socket to a specific device/interface."))
+
+o = s:option(Flag, "fix_gro", translate("Fix GRO"), translate("Handle huge packet caused by GRO."))
 
 o = s:option(Value, "log_level", translate("Log Level"))
 o.datatype = "range(0,6)"
