@@ -54,22 +54,15 @@ create_config() {
 	[ $block_ipv6 -eq 0 ] && echo "block_ipv6 = false" >> $config_file
 	if [ $cache -eq 1 ] ; then
 		echo "cache = true" >> $config_file
-		echo "cache_size = 512" >> $config_file
-		echo "cache_min_ttl = 600" >> $config_file
+		echo "cache_size = 4096" >> $config_file
+		echo "cache_min_ttl = 2400" >> $config_file
 		echo "cache_max_ttl = 86400" >> $config_file
 		echo "cache_neg_min_ttl = 60" >> $config_file
 		echo "cache_neg_max_ttl = 600" >> $config_file
 	fi
 	[ $cache -eq 0 ] && echo "cache = false" >> $config_file
 
-	echo "[query_log]" >> $config_file
-	echo "[nx_log]" >> $config_file
-	echo "[blacklist]" >> $config_file
-	echo "[ip_blacklist]" >> $config_file
-	echo "[whitelist]" >> $config_file
-	echo "[schedules]" >> $config_file
 	echo "[sources]" >> $config_file
-
 	if [ $public_resolvers -eq 1 ] ; then
 		echo "  [sources.'public-resolvers']" >> $config_file
 		echo "  urls = ['https://raw.githubusercontent.com/DNSCrypt/dnscrypt-resolvers/master/v2/public-resolvers.md', 'https://download.dnscrypt.info/resolvers-list/v2/public-resolvers.md']" >> $config_file
@@ -78,7 +71,6 @@ create_config() {
 		echo "  prefix = ''" >> $config_file
 	fi
 
-	echo "[static]" >> $config_file
 	if [ -s /etc/dnscrypt-proxy2/addconf ] ; then
 		cat /etc/dnscrypt-proxy2/addconf >> $config_file
 	fi
@@ -99,7 +91,7 @@ validate_config_section() {
 		'require_nolog:bool:1' \
 		'require_nofilter:bool:1' \
 		'force_tcp:bool:0' \
-		'timeout:uinteger:2500' \
+		'timeout:uinteger:5000' \
 		'keepalive:uinteger:30' \
 		'cert_refresh_delay:uinteger:240' \
 		'fallback_resolver:string:"114.114.114.114:53"' \

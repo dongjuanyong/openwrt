@@ -59,7 +59,7 @@ force_tcp.rmempty = false
 
 timeout = s:option(Value, "timeout", translate("Query timeout"))
 timeout.datatype = "uinteger"
-timeout.placeholder = 2500
+timeout.placeholder = 5000
 
 keepalive = s:option(Value, "keepalive", translate("Query keepalive"))
 keepalive.datatype = "uinteger"
