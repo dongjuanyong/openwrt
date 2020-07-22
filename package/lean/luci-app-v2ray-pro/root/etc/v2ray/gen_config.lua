@@ -170,6 +170,7 @@ local v2ray	= {
 				congestion = (ucursor:get(conf_path, "v2raypro", "kcp_congestion") == "1") and true or false,
 				readBufferSize = tonumber(ucursor:get(conf_path, "v2raypro", "kcp_readbuf")),
 				writeBufferSize = tonumber(ucursor:get(conf_path, "v2raypro", "kcp_writebuf")),
+				seed = ucursor:get(conf_path, "v2raypro", "kcp_seed"),
 				header = {
 					type = ucursor:get(conf_path, "v2raypro", "kcp_obfs")
 				}
@@ -287,6 +288,7 @@ local v2ray	= {
 				congestion = (ucursor:get(conf_path, "v2raypro", "rkcp_congestion") == "1") and true or false,
 				readBufferSize = tonumber(ucursor:get(conf_path, "v2raypro", "rkcp_readbuf")),
 				writeBufferSize = tonumber(ucursor:get(conf_path, "v2raypro", "rkcp_writebuf")),
+				seed = ucursor:get(conf_path, "v2raypro", "rkcp_seed"),
 				header = {
 					type = ucursor:get(conf_path, "v2raypro", "rkcp_obfs")
 				}

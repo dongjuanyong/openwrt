@@ -160,6 +160,9 @@ kcp_writebuf:depends("network_type", "kcp")
 kcp_congestion = s:taboption("main",Flag, "kcp_congestion", translate("KCP Congestion"))
 kcp_congestion:depends("network_type", "kcp")
 
+kcp_seed = s:taboption("main",Value, "kcp_seed", translate("KCP Seed"))
+kcp_seed:depends("network_type", "kcp")
+
 -- websocket settings
 ws_path = s:taboption("main",Value, "ws_path", translate("WebSocket Path"))
 ws_path:depends("network_type", "ws")
@@ -329,6 +332,9 @@ rkcp_writebuf:depends("rnetwork_type", "kcp")
 
 rkcp_congestion = s:taboption("reverse",Flag, "rkcp_congestion", translate("KCP Congestion"))
 rkcp_congestion:depends("rnetwork_type", "kcp")
+
+rkcp_seed = s:taboption("reverse",Value, "rkcp_seed", translate("KCP Seed"))
+rkcp_seed:depends("rnetwork_type", "kcp")
 
 -- websocket settings
 rws_path = s:taboption("reverse",Value, "rws_path", translate("WebSocket Path"))

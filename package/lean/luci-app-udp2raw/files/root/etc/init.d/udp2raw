@@ -70,7 +70,7 @@ create_config() {
 	echo "--retry-on-error" >> $config_file
 
 	[ -n "$dev" ] && echo "--dev ${dev}" >> $config_file
-	[ $fix_gro -eq 1] && echo "--fix-gro" >> $config_file
+	[ $fix_gro -eq 1 ] && echo "--fix-gro" >> $config_file
 
 	[ -n "$log_level" ] && echo "--log-level ${log_level}" >> $config_file
 	echo "--disable-color" >> $config_file
