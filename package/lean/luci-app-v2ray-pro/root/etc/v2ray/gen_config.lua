@@ -16,6 +16,7 @@ local ucursor = require "luci.model.uci".cursor()
 local lip = require "luci.ip"
 
 local v2ray_alternative_proxy = ucursor:get(conf_path, "v2raypro", "alternative_proxy")
+local v2ray_protocol = ucursor:get(conf_path, "v2raypro", "protocol")
 local v2ray_stream_mode = ucursor:get(conf_path, "v2raypro", "network_type")	-- tcp/kcp/ws
 local v2ray_reverse_enabled = ucursor:get(conf_path, "v2raypro", "renabled")
 local v2ray_reverse_domain = (ucursor:get(conf_path, "v2raypro", "rserver_domain") ~= nil) and ucursor:get(conf_path, "v2raypro", "rserver_domain") or "www.myowndomain.com"
@@ -111,7 +112,7 @@ local v2ray	= {
 	outbounds = {
 	  [1] = {
 		tag = "default",
-		protocol = "vmess",
+		protocol = ucursor:get(conf_path, "v2raypro", "protocol"),
 		settings = {
 			vnext = {
 			  [1] = {
@@ -120,8 +121,9 @@ local v2ray	= {
 				users = {
 				  [1] = {
 				    id = ucursor:get(conf_path, "v2raypro", "id"),
-					alterId = tonumber(ucursor:get(conf_path, "v2raypro", "alterId")),
-					security = ucursor:get(conf_path, "v2raypro", "security")
+					alterId = (v2ray_protocol == "vmess") and tonumber(ucursor:get(conf_path, "v2raypro", "alterId")) or nil,
+					security = (v2ray_protocol == "vmess") and ucursor:get(conf_path, "v2raypro", "security") or nil,
+					encryption = (v2ray_protocol == "vless") and "none" or nil
 				  }
 				}
 			  }
@@ -186,7 +188,7 @@ local v2ray	= {
 			httpSettings = (v2ray_stream_mode == "h2") and {
 				path = ucursor:get(conf_path, "v2raypro", "h2_path"),
 				host = (ucursor:get(conf_path, "v2raypro", "h2_domain") ~= nil) and {
-					ucursor:get(conf_path, "v2raypro", "h2_domain")
+					[1] = ucursor:get(conf_path, "v2raypro", "h2_domain")
 				} or nil
 			} or nil,
 
@@ -216,15 +218,16 @@ local v2ray	= {
 		tag = "tunnel",
 		protocol = ucursor:get(conf_path, "v2raypro", "rprotocol"),
 		settings = {
-			vnext = (v2ray_reverse_protocol == "vmess") and {
+			vnext = (v2ray_reverse_protocol == "vmess" or v2ray_reverse_protocol == "vless") and {
 			  [1] = {
 				address = ucursor:get(conf_path, "v2raypro", "raddress"),
 				port = tonumber(ucursor:get(conf_path, "v2raypro", "rport")),
 				users = {
 				  [1] = {
 				    id = ucursor:get(conf_path, "v2raypro", "rid"),
-					alterId = tonumber(ucursor:get(conf_path, "v2raypro", "ralterId")),
-					security = ucursor:get(conf_path, "v2raypro", "rsecurity")
+					alterId = (v2ray_reverse_protocol == "vmess") and tonumber(ucursor:get(conf_path, "v2raypro", "ralterId")) or nil,
+					security = (v2ray_reverse_protocol == "vmess") and ucursor:get(conf_path, "v2raypro", "rsecurity") or nil,
+					encryption = (v2ray_reverse_protocol == "vless") and "none" or nil
 				  }
 				}
 			  }
@@ -304,7 +307,7 @@ local v2ray	= {
 			httpSettings = (v2ray_reverse_streammode == "h2") and {
 				path = ucursor:get(conf_path, "v2raypro", "rh2_path"),
 				host = (ucursor:get(conf_path, "v2raypro", "rh2_domain") ~= nil) and {
-					ucursor:get(conf_path, "v2raypro", "rh2_domain")
+					[1] = ucursor:get(conf_path, "v2raypro", "rh2_domain")
 				} or nil
 			} or nil,
 

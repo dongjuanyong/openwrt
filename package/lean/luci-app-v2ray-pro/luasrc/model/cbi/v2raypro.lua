@@ -90,14 +90,20 @@ server_port = s:taboption("main",Value, "port", translate("Server Port"))
 server_port.datatype = "range(0,65535)"
 server_port.rmempty = false
 
+protocol = s:taboption("main",ListValue, "protocol", translate("Protocol"))
+protocol:value("vmess")
+protocol:value("vless")
+
 id = s:taboption("main",Value, "id", translate("ID"))
 id.password = true
 
 alterId = s:taboption("main",Value, "alterId", translate("Alter ID"))
+alterId:depends("protocol", "vmess")
 alterId.datatype = "range(1,65535)"
 alterId.rmempty = false
 
 security = s:taboption("main",ListValue, "security", translate("Security"))
+security:depends("protocol", "vmess")
 security:value("none")
 security:value("auto")
 security:value("aes-128-gcm")
@@ -231,12 +237,14 @@ rserver_port:depends("rdiffsvr", "1")
 
 rprotocol = s:taboption("reverse",ListValue, "rprotocol", translate("Protocol"))
 rprotocol:value("vmess")
+rprotocol:value("vless")
 rprotocol:value("shadowsocks")
 rprotocol:value("socks")
 rprotocol:depends("rdiffsvr", "1")
 
 rid = s:taboption("reverse",Value, "rid", translate("ID"))
 rid:depends("rprotocol", "vmess")
+rid:depends("rprotocol", "vless")
 rid.password = true
 
 ralterId = s:taboption("reverse",Value, "ralterId", translate("Alter ID"))
