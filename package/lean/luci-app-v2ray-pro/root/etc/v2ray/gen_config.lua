@@ -132,6 +132,9 @@ local v2ray	= {
 		streamSettings = {
 			network = ucursor:get(conf_path, "v2raypro", "network_type"),
 			security = (ucursor:get(conf_path, "v2raypro", "tls") == "1") and "tls" or "none",
+			tlsSettings = (ucursor:get(conf_path, "v2raypro", "servername") ~= nil) and {
+				serverName = ucursor:get(conf_path, "v2raypro", "servername")
+			} or nil,
 			tcpSettings = (v2ray_stream_mode == "tcp" and ucursor:get(conf_path, "v2raypro", "tcp_obfs") == "http") and {
 				header = {
 					type = ucursor:get(conf_path, "v2raypro", "tcp_obfs"),
@@ -187,9 +190,7 @@ local v2ray	= {
 
 			httpSettings = (v2ray_stream_mode == "h2") and {
 				path = ucursor:get(conf_path, "v2raypro", "h2_path"),
-				host = (ucursor:get(conf_path, "v2raypro", "h2_domain") ~= nil) and {
-					[1] = ucursor:get(conf_path, "v2raypro", "h2_domain")
-				} or nil
+				host = (ucursor:get(conf_path, "v2raypro", "h2_domain") ~= nil) and v2ray_get_conf_list('h2_domain') or nil
 			} or nil,
 
 			quicSettings = (v2ray_stream_mode == "quic") and {
@@ -251,6 +252,9 @@ local v2ray	= {
 		streamSettings = {
 			network = ucursor:get(conf_path, "v2raypro", "rnetwork_type"),
 			security = (ucursor:get(conf_path, "v2raypro", "rtls") == "1") and "tls" or "none",
+			tlsSettings = (ucursor:get(conf_path, "v2raypro", "rservername") ~= nil) and {
+				serverName = ucursor:get(conf_path, "v2raypro", "rservername")
+			} or nil,
 			tcpSettings = (v2ray_reverse_streammode == "tcp" and ucursor:get(conf_path, "v2raypro", "rtcp_obfs") == "http") and {
 				header = {
 					type = ucursor:get(conf_path, "v2raypro", "rtcp_obfs"),
@@ -306,9 +310,7 @@ local v2ray	= {
 
 			httpSettings = (v2ray_reverse_streammode == "h2") and {
 				path = ucursor:get(conf_path, "v2raypro", "rh2_path"),
-				host = (ucursor:get(conf_path, "v2raypro", "rh2_domain") ~= nil) and {
-					[1] = ucursor:get(conf_path, "v2raypro", "rh2_domain")
-				} or nil
+				host = (ucursor:get(conf_path, "v2raypro", "rh2_domain") ~= nil) and v2ray_get_conf_list('rh2_domain') or nil
 			} or nil,
 
 			quicSettings = (v2ray_reverse_streammode == "quic") and {

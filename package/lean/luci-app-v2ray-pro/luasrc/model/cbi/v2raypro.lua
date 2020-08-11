@@ -168,6 +168,7 @@ kcp_congestion:depends("network_type", "kcp")
 
 kcp_seed = s:taboption("main",Value, "kcp_seed", translate("KCP Seed"))
 kcp_seed:depends("network_type", "kcp")
+kcp_seed.password = true
 
 -- websocket settings
 ws_path = s:taboption("main",Value, "ws_path", translate("WebSocket Path"))
@@ -181,7 +182,7 @@ ws_headers.datatype = "host"
 h2_path = s:taboption("main",Value, "h2_path", translate("HTTP Path"))
 h2_path:depends("network_type", "h2")
 
-h2_domain = s:taboption("main",Value, "h2_domain", translate("HTTP Domain"))
+h2_domain = s:taboption("main",DynamicList, "h2_domain", translate("HTTP Domain"))
 h2_domain:depends("network_type", "h2")
 h2_domain.datatype = "host"
 
@@ -209,6 +210,10 @@ quic_obfs:depends("network_type", "quic")
 -- others
 tls = s:taboption("main",Flag, "tls", translate("TLS"))
 tls.rmempty = false
+
+servername = s:taboption("main",Value, "servername", translate("Server Name"))
+servername.datatype = "host"
+servername:depends("tls", "1")
 
 mux = s:taboption("main",Flag, "mux", translate("Mux"))
 mux.rmempty = false
@@ -343,6 +348,7 @@ rkcp_congestion:depends("rnetwork_type", "kcp")
 
 rkcp_seed = s:taboption("reverse",Value, "rkcp_seed", translate("KCP Seed"))
 rkcp_seed:depends("rnetwork_type", "kcp")
+rkcp_seed.password = true
 
 -- websocket settings
 rws_path = s:taboption("reverse",Value, "rws_path", translate("WebSocket Path"))
@@ -356,7 +362,7 @@ rws_headers.datatype = "host"
 rh2_path = s:taboption("reverse",Value, "rh2_path", translate("HTTP Path"))
 rh2_path:depends("rnetwork_type", "h2")
 
-rh2_domain = s:taboption("reverse",Value, "rh2_domain", translate("HTTP Domain"))
+rh2_domain = s:taboption("reverse",DynamicList, "rh2_domain", translate("HTTP Domain"))
 rh2_domain:depends("rnetwork_type", "h2")
 rh2_domain.datatype = "host"
 
@@ -384,6 +390,10 @@ rquic_obfs:depends("rnetwork_type", "quic")
 -- others
 rtls = s:taboption("reverse",Flag, "rtls", translate("TLS"))
 rtls:depends("rdiffsvr", "1")
+
+rservername = s:taboption("reverse",Value, "rservername", translate("Server Name"))
+rservername.datatype = "host"
+rservername:depends("rtls", "1")
 
 rmux = s:taboption("reverse",Flag, "rmux", translate("Mux"))
 rmux:depends("rdiffsvr", "1")
