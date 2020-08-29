@@ -88,7 +88,7 @@
 
 --- a/net/core/dev.c	2020-06-23 11:43:45.728009000 -0700
 +++ b/net/core/dev.c	2020-06-27 18:27:40.161351260 -0700
-@@ -3187,10 +3187,17 @@ static int xmit_one(struct sk_buff *skb,
+@@ -3188,10 +3188,17 @@ static int xmit_one(struct sk_buff *skb,
  {
  	unsigned int len;
  	int rc;
@@ -108,7 +108,7 @@
  #ifdef CONFIG_ETHERNET_PACKET_MANGLE
  	if (!dev->eth_mangle_tx ||
  	    (skb = dev->eth_mangle_tx(dev, skb)) != NULL)
-@@ -4681,6 +4688,10 @@ void netdev_rx_handler_unregister(struct
+@@ -4682,6 +4689,10 @@ void netdev_rx_handler_unregister(struct
  	RCU_INIT_POINTER(dev->rx_handler_data, NULL);
  }
  EXPORT_SYMBOL_GPL(netdev_rx_handler_unregister);
@@ -119,7 +119,7 @@
  
  /*
   * Limit the use of PFMEMALLOC reserves to those protocols that implement
-@@ -4731,7 +4742,9 @@ static int __netif_receive_skb_core(stru
+@@ -4732,7 +4743,9 @@ static int __netif_receive_skb_core(stru
  	bool deliver_exact = false;
  	int ret = NET_RX_DROP;
  	__be16 type;
@@ -130,7 +130,7 @@
  	net_timestamp_check(!netdev_tstamp_prequeue, skb);
  
  	trace_netif_receive_skb(skb);
-@@ -4770,6 +4782,15 @@ another_round:
+@@ -4771,6 +4784,15 @@ another_round:
  		if (unlikely(!skb))
  			goto out;
  	}
