@@ -1,7 +1,7 @@
 diff -uNr a/makefile b/makefile
 --- a/makefile	2020-07-19 10:28:57.989528000 +0800
 +++ b/makefile	2020-07-19 12:18:34.384108000 +0800
-@@ -50,6 +50,9 @@
+@@ -51,6 +51,9 @@
  cross3:git_version
  	${cc_cross}   -o ${NAME}_cross    -I. ${SOURCES} ${FLAGS} -lrt -static -O2
  
