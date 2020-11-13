@@ -69,9 +69,6 @@ safe_dns_tcp.rmempty = false
 -- safe_dns_port.optional = false
 -- safe_dns_port:depends("more", "1")
 
---fast_open =s:taboption("basic",Flag, "fast_open", translate("TCP Fast Open"),
---	translate("Enable TCP fast open, only available on kernel > 3.7.0"))
-
 safe_dns_dnscrypt = s:taboption("basic",Flag, "safe_dns_dnscrypt", translate("Use dnscrypt-proxy"),
 	translate("Use dnscrypt-proxy to forward DNS requests, instead of pdnsd"))
 safe_dns_dnscrypt:depends("safe_dns_tcp", "1")
@@ -79,6 +76,9 @@ safe_dns_dnscrypt:depends("safe_dns_tcp", "1")
 alternative_proxy = s:taboption("basic",Flag, "alternative_proxy", translate("Alternative Proxies"),
 	translate("Listen to port 1080 (SOCKS5 proxy) and port 3128 (HTTP proxy)"))
 alternative_proxy.rmempty = false
+
+fast_open =s:taboption("basic",Flag, "fast_open", translate("TCP Fast Open"),
+	translate("Enable TCP fast open, only available on kernel > 3.7.0"))
 
 s:tab("main",  translate("Server Setting"))
 
@@ -214,6 +214,9 @@ tls.rmempty = false
 servername = s:taboption("main",Value, "servername", translate("Server Name"))
 servername.datatype = "host"
 servername:depends("tls", "1")
+
+xtls = s:taboption("main",Flag, "xtls", translate("Using XTLS"))
+xtls:depends({protocol="vless", tls="1"})
 
 mux = s:taboption("main",Flag, "mux", translate("Mux"))
 mux.rmempty = false
@@ -394,9 +397,6 @@ rtls:depends("rdiffsvr", "1")
 rservername = s:taboption("reverse",Value, "rservername", translate("Server Name"))
 rservername.datatype = "host"
 rservername:depends("rtls", "1")
-
-rmux = s:taboption("reverse",Flag, "rmux", translate("Mux"))
-rmux:depends("rdiffsvr", "1")
 
 --------------------------------------------------
 s:tab("list",  translate("User-defined GFW-List"))

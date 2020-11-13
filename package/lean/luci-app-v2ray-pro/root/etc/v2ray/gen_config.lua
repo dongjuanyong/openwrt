@@ -24,9 +24,23 @@ local v2ray_reverse_diffserver = ucursor:get(conf_path, "v2raypro", "rdiffsvr")
 local v2ray_reverse_protocol = ucursor:get(conf_path, "v2raypro", "rprotocol")
 local v2ray_reverse_streammode = ucursor:get(conf_path, "v2raypro", "rnetwork_type")
 
+function get_tls_mode()
+	if ucursor:get(conf_path, "v2raypro", "tls") == "1" then
+		if ucursor:get(conf_path, "v2raypro", "xtls") == "1" then
+			return "xtls"
+		else
+			return "tls"
+		end
+	else
+		return "none"
+	end
+end
+
+local v2ray_tls_mode = get_tls_mode()
+
 function v2ray_get_conf_list(op)
 	local t = {}
-	for k, v in pairs(ucursor:get_list(conf_path, 'v2ray', op)) do
+	for k, v in pairs(ucursor:get_list(conf_path, 'v2raypro', op)) do
 		table.insert(t, v)
 	end
 	return t
@@ -123,6 +137,7 @@ local v2ray	= {
 				    id = ucursor:get(conf_path, "v2raypro", "id"),
 					alterId = (v2ray_protocol == "vmess") and tonumber(ucursor:get(conf_path, "v2raypro", "alterId")) or nil,
 					security = (v2ray_protocol == "vmess") and ucursor:get(conf_path, "v2raypro", "security") or nil,
+					flow = (v2ray_protocol == "vless" and v2ray_tls_mode == "xtls") and "xtls-rprx-direct" or nil,
 					encryption = (v2ray_protocol == "vless") and "none" or nil
 				  }
 				}
@@ -131,8 +146,11 @@ local v2ray	= {
 		},
 		streamSettings = {
 			network = ucursor:get(conf_path, "v2raypro", "network_type"),
-			security = (ucursor:get(conf_path, "v2raypro", "tls") == "1") and "tls" or "none",
-			tlsSettings = (ucursor:get(conf_path, "v2raypro", "servername") ~= nil) and {
+			security = v2ray_tls_mode,
+			tlsSettings = (v2ray_tls_mode == "tls" and ucursor:get(conf_path, "v2raypro", "servername") ~= nil) and {
+				serverName = ucursor:get(conf_path, "v2raypro", "servername")
+			} or nil,
+			xtlsSettings = (v2ray_tls_mode == "xtls" and ucursor:get(conf_path, "v2raypro", "servername") ~= nil) and {
 				serverName = ucursor:get(conf_path, "v2raypro", "servername")
 			} or nil,
 			tcpSettings = (v2ray_stream_mode == "tcp" and ucursor:get(conf_path, "v2raypro", "tcp_obfs") == "http") and {
@@ -201,9 +219,9 @@ local v2ray	= {
 				}
 			} or nil,
 
-			sockopt = {
+			sockopt = (ucursor:get(conf_path, "v2raypro", "fast_open") == "1") and {
 				tcpFastOpen = true
-			}
+			} or nil
 		},
 		mux = {
 			enabled = (ucursor:get(conf_path, "v2raypro", "mux") == "1") and true or false
@@ -319,14 +337,7 @@ local v2ray	= {
 				header = {
 					type = ucursor:get(conf_path, "v2raypro", "rquic_obfs")
 				}
-			} or nil,
-
-			sockopt = {
-				tcpFastOpen = true
-			}
-		},
-		mux = {
-			enabled = (ucursor:get(conf_path, "v2raypro", "rmux") == "1") and true or false
+			} or nil
 		}
 	  } or nil
 	},
