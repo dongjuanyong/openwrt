@@ -71,7 +71,7 @@ start_instance() {
 	_log "info" "listening on: ${listen_addr}:${listen_port}"
 	_log "info" "fec parameters: ${fec}"
 
-	local cmdline="/usr/bin/speederv2 -c -l ${listen_addr}:${listen_port} -r ${server_addr}:${server_port} -f ${fec}"
+	local cmdline="/usr/bin/udpspeeder -c -l ${listen_addr}:${listen_port} -r ${server_addr}:${server_port} -f ${fec}"
 	[ -n "$key" ] && cmdline="${cmdline} -k ${key}"
 	[ -n "$mode" ] && cmdline="${cmdline} --mode ${mode}" && _log "info" "mode: ${mode}"
 	[ -n "$timeout" ] && cmdline="${cmdline} --timeout ${timeout}"
@@ -91,7 +91,7 @@ start_instance() {
 }
 
 start() {
-	pgrep "/usr/bin/speederv2" >/dev/null 2>&1 && return
+	pgrep "/usr/bin/udpspeeder" >/dev/null 2>&1 && return
 
 	if ! validate_config_section "general" ; then
 		_log "err" "Config validate failed."
@@ -104,7 +104,7 @@ start() {
 }
 
 stop() {
-	local pids=$(pgrep "/usr/bin/speederv2" 2> /dev/null)
+	local pids=$(pgrep "/usr/bin/udpspeeder" 2> /dev/null)
 	[ $? -ne 0 ] && return
 	for pid in $pids; do
 		kill $pid >/dev/null 2>&1

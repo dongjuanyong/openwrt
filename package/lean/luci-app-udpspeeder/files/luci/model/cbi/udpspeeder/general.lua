@@ -6,9 +6,9 @@ local function has_bin(name)
 	return luci.sys.call("command -v %s >/dev/null" %{name}) == 0
 end
 
-if not has_bin("speederv2") then
+if not has_bin("udpspeeder") then
 	return Map("udpspeeder", "%s - %s" %{translate("UDPspeeder"),
-		translate("Settings")}, '<b style="color:red">UDPspeeder binary file not found. install UDPspeeder package, or copy binary to /usr/bin/speederv2 manually. </b>')
+		translate("Settings")}, '<b style="color:red">UDPspeeder binary file not found. install UDPspeeder package, or copy binary to /usr/bin/udpspeeder manually. </b>')
 end
 
 uci:foreach("udpspeeder", "servers", function(s)

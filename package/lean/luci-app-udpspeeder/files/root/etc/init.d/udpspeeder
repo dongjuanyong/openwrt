@@ -67,7 +67,7 @@ start_instance() {
 	_log "info" "fec parameters: ${fec}"
 
 	procd_open_instance
-	procd_set_param command /usr/bin/speederv2
+	procd_set_param command /usr/bin/udpspeeder
 	procd_append_param command -c -l ${listen_addr}:${listen_port} -r ${server_addr}:${server_port} -f ${fec}
 	[ -n "$key" ] && procd_append_param command -k ${key}
 	[ -n "$mode" ] && procd_append_param command --mode ${mode} && _log "info" "mode: ${mode}"
