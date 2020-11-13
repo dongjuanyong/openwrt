@@ -10,7 +10,7 @@ EXTRA_COMMANDS="reload_rule"
 V2RAY_REDIR_PORT=7070
 PDNSD_LOCAL_PORT=7453
 DNSCRYPT_LOCAL_PORT=5153
-V2RAYCONF=/tmp/config.json
+V2RAYCONFDIR=/var/etc/v2ray
 CRON_FILE=/etc/crontabs/root
 V2_CONF_GENERATE_LUA=/etc/v2ray/gen_config.lua
 CONFIG=v2raypro
@@ -74,8 +74,9 @@ start()
 
 	# -----------------------------------------------------------------
 	###### v2ray ######
-	/usr/bin/lua $V2_CONF_GENERATE_LUA $CONFIG $V2RAYCONF
-	/usr/bin/v2ray/v2ray -config=$V2RAYCONF >/dev/null 2>&1 &
+	[ -d $V2RAYCONFDIR ] || mkdir -p $V2RAYCONFDIR
+	/usr/bin/lua $V2_CONF_GENERATE_LUA $CONFIG $V2RAYCONFDIR/config.json
+	/usr/bin/v2ray/v2ray -confdir $V2RAYCONFDIR >/dev/null 2>&1 &
 	
 	echo "V2Ray started"
 
@@ -243,7 +244,7 @@ stop_pdnsd()
 		while iptables -t nat -D OUTPUT -p tcp --dport 53 -j pdnsd_output 2>/dev/null; do :; done
 		iptables -t nat -X pdnsd_output
 	fi
-	kill $(cat /var/run/pdnsd.pid) >/dev/null 2>&1 || killall -9 pdnsd >/dev/null 2>&1
+	kill $(cat /var/run/pdnsd.pid 2>/dev/null) >/dev/null 2>&1 || killall -9 pdnsd >/dev/null 2>&1
 	rm -f /var/etc/pdnsd.conf
 }
 
