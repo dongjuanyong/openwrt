@@ -216,7 +216,8 @@ servername.datatype = "host"
 servername:depends("tls", "1")
 
 xtls = s:taboption("main",Flag, "xtls", translate("Using XTLS"))
-xtls:depends({protocol="vless", tls="1"})
+xtls:depends({protocol="vless", tls="1", network_type="tcp"})
+xtls:depends({protocol="vless", tls="1", network_type="kcp"})
 
 mux = s:taboption("main",Flag, "mux", translate("Mux"))
 mux.rmempty = false

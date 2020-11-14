@@ -5,7 +5,7 @@
 START=99
 STOP=10
 
-EXTRA_COMMANDS="reload_rule"
+extra_command "reload_rule"
 
 V2RAY_REDIR_PORT=7070
 PDNSD_LOCAL_PORT=7453
