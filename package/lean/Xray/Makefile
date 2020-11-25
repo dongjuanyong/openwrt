@@ -29,12 +29,12 @@ PKG_BUILD_DEPENDS:=golang/host
 PKG_BUILD_PARALLEL:=1
 PKG_USE_MIPS16:=0
 
-GO_PKG:=github.com/xtls/xray-core/v1/core
+GO_PKG:=github.com/xtls/xray-core/v1
 GO_PKG_LDFLAGS:=-s -w
 GO_PKG_LDFLAGS_X:= \
-	github.com/xtls/xray-core/v1/core.version=$(PKG_VERSION) \
-	github.com/xtls/xray-core/v1/core.build=dongjuanyong \
-	github.com/xtls/xray-core/v1/core.codename=OpenWrt
+	github.com/xtls/xray-core/v1.version=$(PKG_VERSION) \
+	github.com/xtls/xray-core/v1.build=dongjuanyong \
+	github.com/xtls/xray-core/v1.codename=OpenWrt
 
 include $(INCLUDE_DIR)/package.mk
 include $(TOPDIR)/feeds/packages/lang/golang/golang-package.mk
@@ -96,7 +96,7 @@ endif
 endef
 
 define Build/Compile
-	$(eval GO_PKG_BUILD_PKG:=github.com/xtls/xray-core/v1/core/main)
+	$(eval GO_PKG_BUILD_PKG:=github.com/xtls/xray-core/v1/main)
 	$(call GoPackage/Build/Compile)
 	mv -f $(GO_PKG_BUILD_BIN_DIR)/main $(GO_PKG_BUILD_BIN_DIR)/xray
 
