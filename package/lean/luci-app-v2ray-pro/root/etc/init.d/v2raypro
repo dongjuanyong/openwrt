@@ -27,6 +27,7 @@ get_config()
 	config_get vt_safe_dns_tcp $1 safe_dns_tcp
 	config_get vt_safe_dns_dnscrypt $1 safe_dns_dnscrypt
 	config_get cron_mode $1 cron_mode 1
+	config_get vt_use_xray $1 use_xray
 }
 
 
@@ -76,7 +77,11 @@ start()
 	###### v2ray ######
 	[ -d $V2RAYCONFDIR ] || mkdir -p $V2RAYCONFDIR
 	/usr/bin/lua $V2_CONF_GENERATE_LUA $CONFIG ${V2RAYCONFDIR}/config.json
-	/usr/bin/v2ray/v2ray -confdir $V2RAYCONFDIR >/dev/null 2>&1 &
+	if [ "vt_use_xray" = 1 ]; then
+		/usr/bin/xray/xray -confdir $V2RAYCONFDIR >/dev/null 2>&1 &
+	else
+		/usr/bin/v2ray/v2ray -confdir $V2RAYCONFDIR >/dev/null 2>&1 &
+	fi
 	
 	echo "V2Ray started"
 
@@ -152,6 +157,7 @@ stop()
 
 	# -----------------------------------------------------------------
 	killall -9 v2ray 2>/dev/null
+	killall -9 xray 2>/dev/null
 	del_cron
 }
 

@@ -80,6 +80,9 @@ alternative_proxy.rmempty = false
 fast_open =s:taboption("basic",Flag, "fast_open", translate("TCP Fast Open"),
 	translate("Enable TCP fast open, only available on kernel > 3.7.0"))
 
+use_xray = s:taboption("basic",Flag, "use_xray", translate("Using XRay"),
+	translate("Using XRay instead of original V2Ray"))
+
 s:tab("main",  translate("Server Setting"))
 
 server = s:taboption("main",Value, "address", translate("Server Address"))
