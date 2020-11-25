@@ -32,9 +32,9 @@ PKG_USE_MIPS16:=0
 GO_PKG:=github.com/xtls/xray-core/v1
 GO_PKG_LDFLAGS:=-s -w
 GO_PKG_LDFLAGS_X:= \
-	github.com/xtls/xray-core/v1.version=$(PKG_VERSION) \
-	github.com/xtls/xray-core/v1.build=dongjuanyong \
-	github.com/xtls/xray-core/v1.codename=OpenWrt
+	github.com/xtls/xray-core/v1/core.version=$(PKG_VERSION) \
+	github.com/xtls/xray-core/v1/core.build=dongjuanyong \
+	github.com/xtls/xray-core/v1/core.codename=OpenWrt
 
 include $(INCLUDE_DIR)/package.mk
 include $(TOPDIR)/feeds/packages/lang/golang/golang-package.mk
