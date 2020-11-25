@@ -1,0 +1,16 @@
+menu "XRay Configuration"
+	depends on PACKAGE_xray
+
+config XRAY_COMPRESS_GOPROXY
+	bool "Compiling with GOPROXY proxy"
+	default y
+
+config XRAY_EXCLUDE_ASSETS
+	bool "Exclude geoip.dat & geosite.dat"
+	default y
+
+config XRAY_COMPRESS_UPX
+	bool "Compress executable files with UPX"
+	default y
+
+endmenu
