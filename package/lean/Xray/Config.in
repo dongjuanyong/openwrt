@@ -1,9 +1,9 @@
-menu "XRay Configuration"
+menu "Xray Configuration"
 	depends on PACKAGE_xray
 
 config XRAY_COMPRESS_GOPROXY
 	bool "Compiling with GOPROXY proxy"
-	default y
+	default n
 
 config XRAY_EXCLUDE_ASSETS
 	bool "Exclude geoip.dat & geosite.dat"
