@@ -137,7 +137,7 @@ local v2ray	= {
 				    id = ucursor:get(conf_path, "v2raypro", "id"),
 					alterId = (v2ray_protocol == "vmess") and tonumber(ucursor:get(conf_path, "v2raypro", "alterId")) or nil,
 					security = (v2ray_protocol == "vmess") and ucursor:get(conf_path, "v2raypro", "security") or nil,
-					flow = (v2ray_protocol == "vless" and v2ray_tls_mode == "xtls") and "xtls-rprx-direct" or nil,
+					flow = (v2ray_protocol == "vless" and v2ray_tls_mode == "xtls") and "xtls-rprx-splice" or nil,
 					encryption = (v2ray_protocol == "vless") and "none" or nil
 				  }
 				}
