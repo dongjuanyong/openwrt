@@ -77,7 +77,7 @@ start()
 	###### v2ray ######
 	[ -d $V2RAYCONFDIR ] || mkdir -p $V2RAYCONFDIR
 	/usr/bin/lua $V2_CONF_GENERATE_LUA $CONFIG ${V2RAYCONFDIR}/config.json
-	if [ "vt_use_xray" = 1 ]; then
+	if [ "$vt_use_xray" = 1 ]; then
 		/usr/bin/xray run -confdir $V2RAYCONFDIR >/dev/null 2>&1 &
 	else
 		/usr/bin/v2ray -confdir $V2RAYCONFDIR >/dev/null 2>&1 &
