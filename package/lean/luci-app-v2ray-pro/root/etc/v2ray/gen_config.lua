@@ -223,9 +223,9 @@ local v2ray	= {
 				tcpFastOpen = true
 			} or nil
 		},
-		mux = {
-			enabled = (ucursor:get(conf_path, "v2raypro", "mux") == "1") and true or false
-		}
+		mux = (ucursor:get(conf_path, "v2raypro", "mux") == "1") and {
+			enabled = true
+		} or nil
 	  },
 	  [2] = {
 		tag = "direct",
