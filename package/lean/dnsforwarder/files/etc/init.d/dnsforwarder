@@ -248,6 +248,4 @@ restart()
     fi
 }
 
-extra_command "makeconfig"
-extra_command "makegfwlist"
-extra_command "health"
+EXTRA_COMMANDS="makeconfig makegfwlist health"
