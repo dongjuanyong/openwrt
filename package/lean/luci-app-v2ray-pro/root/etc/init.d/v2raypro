@@ -326,7 +326,7 @@ add_rule()
 	iptables -t mangle -A gameboost -p udp -m set --match-set china dst -j RETURN
 	iptables -t mangle -A gameboost -p udp --dport 53 -j RETURN
 	iptables -t mangle -A gameboost -p udp -j TPROXY --on-port 7070 --tproxy-mark 0x233/0xfff
-	iptables -t mangle -A PREROUTING -m set --match-set gameuser src -j gameboost 
+	iptables -t mangle -I PREROUTING -m set --match-set gameuser src -j gameboost 
 
 	for i in $(seq 0 100)
 	do
