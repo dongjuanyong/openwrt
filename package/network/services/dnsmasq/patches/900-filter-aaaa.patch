@@ -13,7 +13,7 @@ diff --git a/src/dnsmasq.h b/src/dnsmasq.h
 index f53e9a5..e9617a6 100644
 --- a/src/dnsmasq.h
 +++ b/src/dnsmasq.h
-@@ -269,7 +269,8 @@
+@@ -273,7 +273,8 @@
  #define OPT_IGNORE_CLID    59
  #define OPT_SINGLE_PORT    60
  #define OPT_LEASE_RENEW    61
