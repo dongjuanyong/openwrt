@@ -1,8 +1,7 @@
+// SPDX-License-Identifier: (GPL-2.0-only OR MIT)
 /*
  * Copyright (c) 2018 MediaTek Inc.
  * Author: Ryder Lee <ryder.lee@mediatek.com>
- *
- * SPDX-License-Identifier: (GPL-2.0-only OR MIT)
  */
 
 /dts-v1/;
@@ -59,13 +58,11 @@
 		green {
 			label = "bpi-r64:pio:green";
 			gpios = <&pio 89 GPIO_ACTIVE_HIGH>;
-			default-state = "off";
 		};
 
 		red {
 			label = "bpi-r64:pio:red";
 			gpios = <&pio 88 GPIO_ACTIVE_HIGH>;
-			default-state = "off";
 		};
 	};
 
@@ -258,15 +255,15 @@
 };
 
 &pcie0 {
-        pinctrl-names = "default";
-        pinctrl-0 = <&pcie0_pins>;
-        status = "okay";
+	pinctrl-names = "default";
+	pinctrl-0 = <&pcie0_pins>;
+	status = "okay";
 };
 
 &pcie1 {
-        pinctrl-names = "default";
-        pinctrl-0 = <&pcie1_pins>;
-        status = "okay";
+	pinctrl-names = "default";
+	pinctrl-0 = <&pcie1_pins>;
+	status = "okay";
 };
 
 &pio {
