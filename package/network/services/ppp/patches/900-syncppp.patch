@@ -87,10 +87,10 @@
  extern bool	dump_options;	/* print out option values */
  extern bool	dryrun;		/* check everything, print options, exit */
  extern int	child_wait;	/* # seconds to wait for children at end */
-+extern int npppd;  /* synchronize between multiple pppd */
++extern int	npppd;		/* synchronize between multiple pppd */
  
  #ifdef USE_EAPTLS
- extern char *crl_dir;
+ extern char	*crl_dir;
 --- /dev/null
 +++ b/pppd/syncppp.c
 @@ -0,0 +1,75 @@
